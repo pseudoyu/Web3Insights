@@ -1,5 +1,6 @@
 import { FC, useState, useEffect } from "react";
 import ReactECharts from "echarts-for-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface CommunityOpenRankProps {
 	repoName: string;
@@ -81,11 +82,11 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 		const categories = Array.from(typeMap.values());
 
 		return {
-			title: {
-				text: `Community OpenRank for ${repoName} in ${month}`,
-				top: "bottom",
-				left: "right",
-			},
+			// title: {
+			// 	text: `Community OpenRank for ${repoName} in ${month}`,
+			// 	top: "top",
+			// 	left: "center",
+			// },
 			legend: [{ data: categories }],
 			tooltip: { trigger: "item" },
 			series: [
@@ -195,7 +196,12 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 		]);
 
 		return (
-			<div className="bordered p-4 h-[340px] overflow-y-auto">
+			<motion.div
+				initial={{ opacity: 0, y: 20 }}
+				animate={{ opacity: 1, y: 0 }}
+				exit={{ opacity: 0, y: 20 }}
+				className="bordered p-4 h-[340px] overflow-y-auto"
+			>
 				<h2 className="text-center text-xl mb-4">Details</h2>
 				<div className="scrollit h-[280px]">
 					<table className="w-full border-collapse text-sm">
@@ -236,7 +242,7 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 						</tbody>
 					</table>
 				</div>
-			</div>
+			</motion.div>
 		);
 	};
 
@@ -250,28 +256,43 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 
 	return (
 		<div className="flex flex-col">
-			<div className="w-full h-[500px] bordered mb-4">
-				<ReactECharts
-					option={getChartOption(graphData, selectedMonth)}
-					style={{ height: "100%" }}
-					onEvents={{
-						dblclick: (params: { data?: { id?: string } }) => {
-							if (params.data?.id) {
-								setSelectedNode(params.data.id);
-							}
-						},
-					}}
-				/>
-			</div>
-			<hr className="border-t border-gray-300 my-4" />
-			<div className="flex">
+			<h1 className="text-2xl font-bold text-center mb-6">
+				Community OpenRank for {repoName} in {selectedMonth}
+			</h1>
+			<div className="flex mb-4">
 				<div className="w-1/2 pr-2">
 					{renderLeaderboard(graphData, selectedMonth)}
 				</div>
-				<div className="w-1/2 pl-2">
-					{renderDetails(graphData, selectedMonth, selectedNode)}
+				<div className="w-1/2 pl-2 h-[500px] bordered">
+					<div className="h-[50px]">
+						{/* Space for color selector/annotate */}
+					</div>
+					<ReactECharts
+						option={getChartOption(graphData, selectedMonth)}
+						style={{ height: "calc(100% - 50px)" }}
+						onEvents={{
+							click: (params: { data?: { id?: string } }) => {
+								if (params.data?.id) {
+									setSelectedNode(params.data.id);
+								}
+							},
+						}}
+					/>
 				</div>
 			</div>
+			<hr className="border-t border-gray-300 my-4" />
+			<AnimatePresence>
+				{selectedNode && (
+					<motion.div
+						initial={{ opacity: 0, height: 0 }}
+						animate={{ opacity: 1, height: "auto" }}
+						exit={{ opacity: 0, height: 0 }}
+						transition={{ duration: 0.3 }}
+					>
+						{renderDetails(graphData, selectedMonth, selectedNode)}
+					</motion.div>
+				)}
+			</AnimatePresence>
 		</div>
 	);
 };

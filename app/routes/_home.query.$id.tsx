@@ -258,12 +258,48 @@ export default function QueryPage() {
 					</Code>
 				</motion.div>
 
+				<motion.div
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					transition={{ duration: 0.5, delay: 0.4 }}
+					className="mb-10 bg-white rounded-xl shadow-lg p-6"
+				>
+					{!result && <Placeholder />}
+					<div className="text-gray-800 leading-relaxed">
+						<Markdown>{parsedAnswer}</Markdown>
+					</div>
+				</motion.div>
+
 				<div className="flex flex-wrap -mx-3">
+					{loaderData.communityOpenRankData &&
+						loaderData.keyword &&
+						loaderData.keyword.includes("/") && (
+							<motion.div
+								initial={{ opacity: 0, scale: 0.9 }}
+								animate={{ opacity: 1, scale: 1 }}
+								transition={{ duration: 0.5, delay: 0.6 }}
+								className="w-full px-3 mb-6"
+							>
+								<div className="bg-white rounded-xl shadow-lg p-6">
+									{isChartLoading ? (
+										<div className="flex justify-center items-center h-[800px]">
+											<Spinner size="lg" color="primary" />
+										</div>
+									) : (
+										<CommunityOpenRank
+											repoName={loaderData.keyword}
+											graphData={loaderData.communityOpenRankData}
+										/>
+									)}
+								</div>
+							</motion.div>
+						)}
+
 					{loaderData.openRankData && (
 						<motion.div
 							initial={{ opacity: 0, scale: 0.9 }}
 							animate={{ opacity: 1, scale: 1 }}
-							transition={{ duration: 0.5, delay: 0.4 }}
+							transition={{ duration: 0.5, delay: 0.8 }}
 							className="w-full md:w-1/2 px-3 mb-6"
 						>
 							<div className="bg-white rounded-xl shadow-lg p-6">
@@ -285,7 +321,7 @@ export default function QueryPage() {
 						<motion.div
 							initial={{ opacity: 0, scale: 0.9 }}
 							animate={{ opacity: 1, scale: 1 }}
-							transition={{ duration: 0.5, delay: 0.6 }}
+							transition={{ duration: 0.5, delay: 1 }}
 							className="w-full md:w-1/2 px-3 mb-6"
 						>
 							<div className="bg-white rounded-xl shadow-lg p-6">
@@ -307,7 +343,7 @@ export default function QueryPage() {
 						<motion.div
 							initial={{ opacity: 0, scale: 0.9 }}
 							animate={{ opacity: 1, scale: 1 }}
-							transition={{ duration: 0.5, delay: 0.8 }}
+							transition={{ duration: 0.5, delay: 1.2 }}
 							className="w-full px-3 mb-6"
 						>
 							<div className="bg-white rounded-xl shadow-lg p-6">
@@ -324,48 +360,12 @@ export default function QueryPage() {
 							</div>
 						</motion.div>
 					)}
-
-					{loaderData.communityOpenRankData &&
-						loaderData.keyword &&
-						loaderData.keyword.includes("/") && (
-							<motion.div
-								initial={{ opacity: 0, scale: 0.9 }}
-								animate={{ opacity: 1, scale: 1 }}
-								transition={{ duration: 0.5, delay: 1 }}
-								className="w-full px-3 mb-6"
-							>
-								<div className="bg-white rounded-xl shadow-lg p-6">
-									{isChartLoading ? (
-										<div className="flex justify-center items-center h-[800px]">
-											<Spinner size="lg" color="primary" />
-										</div>
-									) : (
-										<CommunityOpenRank
-											repoName={loaderData.keyword}
-											graphData={loaderData.communityOpenRankData}
-										/>
-									)}
-								</div>
-							</motion.div>
-						)}
 				</div>
-
-				<motion.div
-					initial={{ opacity: 0 }}
-					animate={{ opacity: 1 }}
-					transition={{ duration: 0.5, delay: 1 }}
-					className="mt-10 bg-white rounded-xl shadow-lg p-6"
-				>
-					{!result && <Placeholder />}
-					<div className="text-gray-800 leading-relaxed">
-						<Markdown>{parsedAnswer}</Markdown>
-					</div>
-				</motion.div>
 
 				<motion.div
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.5, delay: 1.2 }}
+					transition={{ duration: 0.5, delay: 1.4 }}
 					className="mt-12"
 				>
 					<fetcher.Form method="POST" action="/?index">
