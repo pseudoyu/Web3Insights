@@ -82,11 +82,11 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 		const categories = Array.from(typeMap.values());
 
 		return {
-			// title: {
-			// 	text: `Community OpenRank for ${repoName} in ${month}`,
-			// 	top: "top",
-			// 	left: "center",
-			// },
+			title: {
+				text: `Community OpenRank for ${repoName} in ${month}`,
+				top: "bottom",
+				left: "center",
+			},
 			legend: [{ data: categories }],
 			tooltip: { trigger: "item" },
 			series: [
@@ -125,9 +125,9 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 			.sort((a, b) => b.value - a.value);
 
 		return (
-			<div className="bordered p-4 h-[400px] overflow-y-auto">
+			<div className="bordered p-4 h-[500px] overflow-y-auto">
 				<h2 className="text-center text-xl mb-4">Leaderboard</h2>
-				<div className="scrollit h-[340px]">
+				<div className="scrollit h-[440px]">
 					<table className="w-full border-collapse text-sm">
 						<tbody>
 							{users.map((user, index) => (
@@ -275,12 +275,9 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 					{renderLeaderboard(graphData, selectedMonth)}
 				</div>
 				<div className="w-1/2 pl-2 h-[500px] bordered">
-					<div className="h-[50px]">
-						{/* Space for color selector/annotate */}
-					</div>
 					<ReactECharts
 						option={getChartOption(graphData, selectedMonth)}
-						style={{ height: "calc(100% - 50px)" }}
+						style={{ height: "100%" }}
 						onEvents={{
 							click: (params: { data?: { id?: string } }) => {
 								if (params.data?.id) {
