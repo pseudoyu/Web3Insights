@@ -22,7 +22,7 @@ import ParticipantsChart from "~/components/ParticipantsChart";
 import CommunityOpenRank from "~/components/CommunityOpenRank";
 import axios from "axios";
 import { isAddress } from "viem";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
 	const title = data ? `${data.query} - Web3Insight` : "Web3Insight";
@@ -264,10 +264,29 @@ export default function QueryPage() {
 					transition={{ duration: 0.5, delay: 0.4 }}
 					className="mb-10 bg-white rounded-xl shadow-lg p-6"
 				>
-					{!result && <Placeholder />}
-					<div className="text-gray-800 leading-relaxed">
-						<Markdown>{parsedAnswer}</Markdown>
-					</div>
+					<AnimatePresence mode="wait">
+						{!result ? (
+							<motion.div
+								key="placeholder"
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+							>
+								<Placeholder />
+							</motion.div>
+						) : (
+							<motion.div
+								key="content"
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								transition={{ duration: 0.5 }}
+							>
+								<div className="text-gray-800 leading-relaxed">
+									<Markdown>{parsedAnswer}</Markdown>
+								</div>
+							</motion.div>
+						)}
+					</AnimatePresence>
 				</motion.div>
 
 				<div className="flex flex-wrap -mx-3">
