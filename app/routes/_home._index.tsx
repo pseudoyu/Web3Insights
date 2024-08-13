@@ -13,9 +13,14 @@ import { prisma } from "~/prisma.server";
 import Logo from "../images/logo.png";
 import { getAuth } from "@clerk/remix/ssr.server";
 import { Prisma } from "@prisma/client";
+import { guestSearchLimiter, userSearchLimiter } from "~/limiter.server";
+import { getClientIPAddress } from "remix-utils/get-client-ip-address";
+import { useEffect } from "react";
 
 export enum ErrorType {
 	Basic = "Basic",
+	SigninNeeded = "SigninNeeded",
+	ReachMaximized = "ReachMaximized",
 }
 
 export const meta: MetaFunction = () => {
@@ -78,6 +83,31 @@ export const loader = async (ctx: LoaderFunctionArgs) => {
 export const action = async (ctx: ActionFunctionArgs) => {
 	const auth = await getAuth(ctx);
 
+	let searchLimiter = guestSearchLimiter;
+	let key = getClientIPAddress(ctx.request.headers) || "unknown";
+
+	if (auth.userId) {
+		searchLimiter = userSearchLimiter;
+		key = auth.userId;
+	}
+
+	try {
+		await searchLimiter.consume(key, 1);
+	} catch (e) {
+		// reach limit
+		if (auth.userId) {
+			return json({
+				type: ErrorType.ReachMaximized,
+				error: "Usage limit exceeded",
+			});
+		}
+
+		return json({
+			type: ErrorType.SigninNeeded,
+			error: "Usage limit exceeded",
+		});
+	}
+
 	const formData = await ctx.request.formData();
 	const query = formData.get("query") as string;
 
@@ -135,6 +165,20 @@ export default function Index() {
 	const pinned = loaderData.pinned;
 
 	const errorMessage = fetcher.data?.error;
+	const errorType = fetcher.data?.type;
+
+	useEffect(() => {
+		if (fetcher.state === "idle" && errorMessage) {
+			if (errorType === ErrorType.SigninNeeded) {
+				// Handle sign-in needed error
+				console.log("Sign-in needed");
+			}
+			if (errorType === ErrorType.ReachMaximized) {
+				// Handle usage limit reached error
+				console.log("Usage limit reached");
+			}
+		}
+	}, [fetcher.state, errorMessage, errorType]);
 
 	return (
 		<div className="h-dvh">
