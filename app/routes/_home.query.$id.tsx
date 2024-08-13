@@ -19,6 +19,7 @@ import { ErrorType } from "./_home._index";
 import OpenRankChart from "~/components/OpenRankChart";
 import AttentionChart from "~/components/AttentionChart";
 import ParticipantsChart from "~/components/ParticipantsChart";
+import CommunityOpenRank from "~/components/CommunityOpenRank";
 import axios from "axios";
 import { isAddress } from "viem";
 import { motion } from "framer-motion";
@@ -74,6 +75,37 @@ async function fetchParticipantsData(repoName: string) {
 	}
 }
 
+async function fetchCommunityOpenRankData(repoName: string) {
+	const url = `${process.env.OPENDIGGER_URL}/github/${repoName}/community_openrank.json`;
+	try {
+		const response = await axios.get(url);
+		const data = response.data;
+
+		// Sort the months in descending order
+		const sortedMonths = Object.keys(data.data).sort((a, b) =>
+			b.localeCompare(a),
+		);
+
+		// Get the most recent 6 months
+		const recentMonths = sortedMonths.slice(0, 6);
+
+		// Create a new object with only the recent months' data
+		const recentData = {};
+		recentMonths.forEach((month) => {
+			recentData[month] = data.data[month];
+		});
+
+		// Return the modified data object
+		return {
+			...data,
+			data: recentData,
+		};
+	} catch (error) {
+		console.error("Error fetching Community OpenRank data:", error);
+		return null;
+	}
+}
+
 export const loader = async (ctx: LoaderFunctionArgs) => {
 	const auth = await getAuth(ctx);
 
@@ -114,6 +146,7 @@ export const loader = async (ctx: LoaderFunctionArgs) => {
 	let openRankData = null;
 	let attentionData = null;
 	let participantsData = null;
+	let communityOpenRankData = null;
 	if (query.keyword) {
 		const type =
 			isAddress(query.keyword) || query.keyword.endsWith(".eth")
@@ -128,6 +161,7 @@ export const loader = async (ctx: LoaderFunctionArgs) => {
 			if (type === "github_repo") {
 				attentionData = await fetchOpenDiggerData(openDiggerName, "attention");
 				participantsData = await fetchParticipantsData(query.keyword);
+				communityOpenRankData = await fetchCommunityOpenRankData(query.keyword);
 			}
 		}
 	}
@@ -141,6 +175,7 @@ export const loader = async (ctx: LoaderFunctionArgs) => {
 		openRankData,
 		attentionData,
 		participantsData,
+		communityOpenRankData,
 	});
 };
 
@@ -188,7 +223,8 @@ export default function QueryPage() {
 		if (
 			loaderData.openRankData ||
 			loaderData.attentionData ||
-			loaderData.participantsData
+			loaderData.participantsData ||
+			loaderData.communityOpenRankData
 		) {
 			const timer = setTimeout(() => setIsChartLoading(false), 1000);
 			return () => clearTimeout(timer);
@@ -197,6 +233,7 @@ export default function QueryPage() {
 		loaderData.openRankData,
 		loaderData.attentionData,
 		loaderData.participantsData,
+		loaderData.communityOpenRankData,
 	]);
 
 	return (
@@ -280,19 +317,37 @@ export default function QueryPage() {
 									</div>
 								) : (
 									<ParticipantsChart
-										data={
-											loaderData.participantsData as {
-												participants: Record<string, number>;
-												newContributors: Record<string, number>;
-												inactiveContributors: Record<string, number>;
-											}
-										}
+										data={loaderData.participantsData}
 										repoName={loaderData.keyword}
 									/>
 								)}
 							</div>
 						</motion.div>
 					)}
+
+					{loaderData.communityOpenRankData &&
+						loaderData.keyword &&
+						loaderData.keyword.includes("/") && (
+							<motion.div
+								initial={{ opacity: 0, scale: 0.9 }}
+								animate={{ opacity: 1, scale: 1 }}
+								transition={{ duration: 0.5, delay: 1 }}
+								className="w-full px-3 mb-6"
+							>
+								<div className="bg-white rounded-xl shadow-lg p-6">
+									{isChartLoading ? (
+										<div className="flex justify-center items-center h-[800px]">
+											<Spinner size="lg" color="primary" />
+										</div>
+									) : (
+										<CommunityOpenRank
+											repoName={loaderData.keyword}
+											graphData={loaderData.communityOpenRankData}
+										/>
+									)}
+								</div>
+							</motion.div>
+						)}
 				</div>
 
 				<motion.div
