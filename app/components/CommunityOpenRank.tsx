@@ -83,7 +83,7 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 
 		return {
 			title: {
-				text: `Community OpenRank for ${repoName} in ${month}`,
+				text: "Community OpenRank Network",
 				top: "bottom",
 				left: "center",
 			},
