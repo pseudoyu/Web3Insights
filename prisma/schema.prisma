@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Query {
+  id         String   @id @default(cuid())
+  query      String
+  keyword    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  answer     String?
+  references Json     @default("[]")
+  pin        Boolean  @default(false)
+
+  ownerId String? @map("owner_id")
+  owner   User?   @relation(fields: [ownerId], references: [id])
+
+  @@index([ownerId])
+}
+
+model User {
+  id          String   @id @default(cuid())
+  clerkUserId String   @unique @map("clerk_user_id")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  queries     Query[]
+}
