@@ -133,9 +133,28 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 							{users.map((user, index) => (
 								<tr
 									key={user.id}
-									className={index % 2 === 0 ? "bg-[#D6EEEE]" : ""}
+									className={`transition-colors duration-200 ease-in-out ${
+										index % 2 === 0 ? "bg-[#D6EEEE]" : ""
+									} hover:bg-blue-100 cursor-pointer`}
+									onClick={() => setSelectedNode(user.id)}
+									onKeyDown={(e) => {
+										if (e.key === "Enter" || e.key === " ") {
+											setSelectedNode(user.id);
+										}
+									}}
+									tabIndex={0}
+									role="button"
 								>
-									<td className="border p-1">{user.login}</td>
+									<td className="border p-1">
+										<a
+											href={`https://github.com/${user.login}`}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="hover:text-blue-600 hover:underline"
+										>
+											{user.login}
+										</a>
+									</td>
 									<td className="border p-1">{user.value.toFixed(3)}</td>
 								</tr>
 							))}
@@ -257,7 +276,7 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 	return (
 		<div className="flex flex-col">
 			<h1 className="text-2xl font-bold text-center mb-6">
-				Community OpenRank for {repoName} in {selectedMonth}
+				Community OpenRank for {repoName}
 			</h1>
 			<div className="flex mb-4">
 				<div className="w-1/2 pr-2">
