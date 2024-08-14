@@ -1,6 +1,7 @@
 import { FC, useState, useEffect } from "react";
 import ReactECharts from "echarts-for-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Select, SelectItem } from "@nextui-org/react";
 
 interface CommunityOpenRankProps {
 	repoName: string;
@@ -34,11 +35,16 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 }) => {
 	const [selectedNode, setSelectedNode] = useState<string | null>(null);
 	const [selectedMonth, setSelectedMonth] = useState<string>("");
+	const [availableMonths, setAvailableMonths] = useState<string[]>([]);
 
 	useEffect(() => {
 		if (graphData?.data) {
-			const firstMonth = Object.keys(graphData.data)[0];
-			setSelectedMonth(firstMonth);
+			const months = Object.keys(graphData.data).sort((a, b) =>
+				b.localeCompare(a),
+			);
+			const recentMonths = months.slice(0, 6);
+			setAvailableMonths(recentMonths);
+			setSelectedMonth(recentMonths[0]);
 		}
 	}, [graphData]);
 
@@ -83,7 +89,7 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 
 		return {
 			title: {
-				text: "Community OpenRank Network",
+				text: `Community OpenRank Network - ${month}`,
 				top: "bottom",
 				left: "center",
 			},
@@ -270,6 +276,24 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 			<h1 className="text-2xl font-bold text-center mb-6">
 				Community OpenRank for {repoName}
 			</h1>
+			<div className="mb-4">
+				<Select
+					label="Select Month"
+					placeholder="Select a month"
+					selectedKeys={[selectedMonth]}
+					onChange={(e) => setSelectedMonth(e.target.value)}
+					className="max-w-xs mx-auto"
+					size="sm"
+					variant="bordered"
+					color="primary"
+				>
+					{availableMonths.map((month) => (
+						<SelectItem key={month} value={month}>
+							{month}
+						</SelectItem>
+					))}
+				</Select>
+			</div>
 			<div className="flex mb-4">
 				<div className="w-1/2 pr-2">
 					{renderLeaderboard(graphData, selectedMonth)}
