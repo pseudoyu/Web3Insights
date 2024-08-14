@@ -132,7 +132,6 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 
 		return (
 			<div className="bordered p-4 h-[500px] overflow-y-auto">
-				<h2 className="text-center text-xl mb-4">Leaderboard</h2>
 				<div className="scrollit h-[440px]">
 					<table className="w-full border-collapse text-sm">
 						<tbody>
@@ -227,7 +226,6 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 				exit={{ opacity: 0, y: 20 }}
 				className="bordered p-4 h-[340px] overflow-y-auto"
 			>
-				<h2 className="text-center text-xl mb-4">Details</h2>
 				<div className="scrollit h-[280px]">
 					<table className="w-full border-collapse text-sm">
 						<thead>
