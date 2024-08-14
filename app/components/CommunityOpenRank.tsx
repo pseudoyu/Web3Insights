@@ -197,7 +197,6 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 
 		const data = graphData.data[month];
 		const index = graphData.meta.nodes.findIndex((i) => i[0] === selectedNode);
-		const selfNode = data.nodes.find((i) => i[0] === index);
 		const other = data.links
 			.filter((l) => l[1] === index)
 			.map((l) => {
@@ -297,22 +296,28 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 					</Select>
 				</motion.div>
 			</div>
-			<div className="flex flex-col md:flex-row mb-3">
-				<div className="w-full md:w-1/2 md:pr-2 mb-3 md:mb-0">
-					{renderLeaderboard(graphData, selectedMonth)}
+			<div className={`flex flex-col ${isMobile ? "" : "md:flex-row"} mb-3`}>
+				<div
+					className={`w-full ${isMobile ? "mb-3" : "md:w-1/2 md:pr-2 md:mb-0"}`}
+				>
+					<div
+						className={`h-[300px] md:h-[500px] bordered ${isMobile ? "mb-3" : ""}`}
+					>
+						<ReactECharts
+							option={getChartOption(graphData, selectedMonth)}
+							style={{ height: "100%" }}
+							onEvents={{
+								click: (params: { data?: { id?: string } }) => {
+									if (params.data?.id) {
+										setSelectedNode(params.data.id);
+									}
+								},
+							}}
+						/>
+					</div>
 				</div>
-				<div className="w-full md:w-1/2 md:pl-2 h-[300px] md:h-[500px] bordered">
-					<ReactECharts
-						option={getChartOption(graphData, selectedMonth)}
-						style={{ height: "100%" }}
-						onEvents={{
-							click: (params: { data?: { id?: string } }) => {
-								if (params.data?.id) {
-									setSelectedNode(params.data.id);
-								}
-							},
-						}}
-					/>
+				<div className={`w-full ${isMobile ? "" : "md:w-1/2 md:pl-2"}`}>
+					{renderLeaderboard(graphData, selectedMonth)}
 				</div>
 			</div>
 			<hr className="border-t border-gray-300 my-3" />
