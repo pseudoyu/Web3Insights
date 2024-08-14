@@ -236,6 +236,10 @@ export default function Index() {
 						Supported by{" "}
 						<a href="https://openbuild.xyz/" className="underline">
 							OpenBuild
+						</a>{" "}
+						&{" "}
+						<a href="https://rss3.io/" className="underline">
+							RSS3
 						</a>
 					</div>
 				</div>
