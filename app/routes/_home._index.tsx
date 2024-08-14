@@ -209,11 +209,11 @@ export default function Index() {
 										isIconOnly
 									/>
 								}
-								description="Insight data for Web3 open-source projects and developers"
+								description="Insight data for Web3 open-source projects, developers and users"
 								size="lg"
 								isInvalid={!!errorMessage}
 								errorMessage={errorMessage}
-								placeholder="Enter an evm address, github username/repo or just ask something."
+								placeholder="enter a github username/repo, evm address, or just ask something"
 								variant="bordered"
 								required
 								name="query"
