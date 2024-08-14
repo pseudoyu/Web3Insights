@@ -2,6 +2,7 @@ import { FC, useState, useEffect } from "react";
 import ReactECharts from "echarts-for-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Select, SelectItem } from "@nextui-org/react";
+import { useMediaQuery } from "react-responsive";
 
 interface CommunityOpenRankProps {
 	repoName: string;
@@ -36,6 +37,7 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 	const [selectedNode, setSelectedNode] = useState<string | null>(null);
 	const [selectedMonth, setSelectedMonth] = useState<string>("");
 	const [availableMonths, setAvailableMonths] = useState<string[]>([]);
+	const isMobile = useMediaQuery({ maxWidth: 767 });
 
 	useEffect(() => {
 		if (graphData?.data) {
@@ -64,7 +66,7 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 				initialValue: node[1],
 				value: node[2],
 				name,
-				symbolSize: Math.log(node[2] + 1) * 10,
+				symbolSize: Math.log(node[2] + 1) * (isMobile ? 6 : 8),
 				category: type,
 			};
 		});
@@ -75,7 +77,7 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 			value: link[2],
 		}));
 
-		nodes.forEach((node) => {
+		for (const node of nodes) {
 			if (node.category === "issue" || node.category === "pull") {
 				links.push({
 					source: graphData.meta.nodes[0][0],
@@ -83,7 +85,7 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 					value: 0.05,
 				});
 			}
-		});
+		}
 
 		const categories = Array.from(typeMap.values());
 
@@ -92,8 +94,16 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 				text: `Community OpenRank Network - ${month}`,
 				top: "bottom",
 				left: "center",
+				textStyle: { fontSize: isMobile ? 12 : 14 },
 			},
-			legend: [{ data: categories }],
+			legend: [
+				{
+					data: categories,
+					textStyle: { fontSize: isMobile ? 8 : 10 },
+					itemWidth: isMobile ? 8 : 10,
+					itemHeight: isMobile ? 8 : 10,
+				},
+			],
 			tooltip: { trigger: "item" },
 			series: [
 				{
@@ -107,10 +117,12 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 					label: {
 						position: "right",
 						show: true,
+						fontSize: isMobile ? 6 : 8,
 					},
 					force: {
 						layoutAnimation: false,
-						repulsion: 300,
+						repulsion: isMobile ? 150 : 200,
+						edgeLength: isMobile ? 20 : 30,
 					},
 				},
 			],
@@ -131,9 +143,15 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 			.sort((a, b) => b.value - a.value);
 
 		return (
-			<div className="bordered p-4 h-[500px] overflow-y-auto">
-				<div className="scrollit h-[440px]">
-					<table className="w-full border-collapse text-sm">
+			<div className="bordered p-2 h-[300px] md:h-[400px] overflow-y-auto">
+				<div className="scrollit h-[260px] md:h-[360px]">
+					<table className="w-full border-collapse text-xs">
+						<thead>
+							<tr>
+								<th className="border p-1">Username</th>
+								<th className="border p-1">Score</th>
+							</tr>
+						</thead>
 						<tbody>
 							{users.map((user, index) => (
 								<tr
@@ -196,8 +214,6 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 						.toUpperCase()} ${sourceNode[1]}`;
 				return [
 					name,
-					((1 - graphData.meta.retentionFactor) * l[2]).toFixed(3),
-					sourceValue ? sourceValue[2].toFixed(3) : "N/A",
 					sourceValue
 						? (
 								(1 - graphData.meta.retentionFactor) *
@@ -207,13 +223,11 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 						: "N/A",
 				];
 			})
-			.sort((a, b) => Number.parseFloat(b[3]) - Number.parseFloat(a[3]));
+			.sort((a, b) => Number.parseFloat(b[1]) - Number.parseFloat(a[1]));
 
 		const repoNode = data.nodes.find((i) => i[0] === 0);
 		other.push([
 			graphData.meta.repoName,
-			(1 / (data.nodes.length - 1)).toFixed(3),
-			repoNode ? repoNode[2].toFixed(3) : "N/A",
 			repoNode
 				? ((1 / (data.nodes.length - 1)) * repoNode[2]).toFixed(3)
 				: "N/A",
@@ -224,27 +238,19 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 				initial={{ opacity: 0, y: 20 }}
 				animate={{ opacity: 1, y: 0 }}
 				exit={{ opacity: 0, y: 20 }}
-				className="bordered p-4 h-[340px] overflow-y-auto"
+				className="bordered p-2 h-[250px] md:h-[300px] overflow-y-auto"
 			>
-				<div className="scrollit h-[280px]">
-					<table className="w-full border-collapse text-sm">
+				<div className="scrollit h-[210px] md:h-[260px]">
+					<table className="w-full border-collapse text-xs">
 						<thead>
 							<tr>
-								<th className="border p-1">From</th>
-								<th className="border p-1">Ratio</th>
-								<th className="border p-1">Value</th>
-								<th className="border p-1">OpenRank</th>
+								<th className="border p-1">Contributions</th>
+								<th className="border p-1">Score</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr>
 								<td className="border p-1">Self</td>
-								<td className="border p-1">
-									{graphData.meta.retentionFactor.toFixed(3)}
-								</td>
-								<td className="border p-1">
-									{selfNode ? selfNode[1].toFixed(3) : "N/A"}
-								</td>
 								<td className="border p-1">
 									{selfNode
 										? (graphData.meta.retentionFactor * selfNode[1]).toFixed(3)
@@ -258,8 +264,6 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 								>
 									<td className="border p-1">{row[0]}</td>
 									<td className="border p-1">{row[1]}</td>
-									<td className="border p-1">{row[2]}</td>
-									<td className="border p-1">{row[3]}</td>
 								</tr>
 							))}
 						</tbody>
@@ -271,10 +275,10 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 
 	return (
 		<div className="flex flex-col">
-			<h1 className="text-2xl font-bold text-center mb-6">
+			<h1 className="text-lg md:text-xl font-bold text-center mb-4">
 				Community OpenRank for {repoName}
 			</h1>
-			<div className="mb-4">
+			<div className="mb-3">
 				<Select
 					label="Select Month"
 					placeholder="Select a month"
@@ -292,11 +296,11 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 					))}
 				</Select>
 			</div>
-			<div className="flex mb-4">
-				<div className="w-1/2 pr-2">
+			<div className="flex flex-col md:flex-row mb-3">
+				<div className="w-full md:w-1/2 md:pr-2 mb-3 md:mb-0">
 					{renderLeaderboard(graphData, selectedMonth)}
 				</div>
-				<div className="w-1/2 pl-2 h-[500px] bordered">
+				<div className="w-full md:w-1/2 md:pl-2 h-[300px] md:h-[400px] bordered">
 					<ReactECharts
 						option={getChartOption(graphData, selectedMonth)}
 						style={{ height: "100%" }}
@@ -310,7 +314,7 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 					/>
 				</div>
 			</div>
-			<hr className="border-t border-gray-300 my-4" />
+			<hr className="border-t border-gray-300 my-3" />
 			<AnimatePresence>
 				{selectedNode && (
 					<motion.div
