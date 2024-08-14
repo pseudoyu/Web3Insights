@@ -184,7 +184,7 @@ export default function Index() {
 		<div className="min-h-dvh flex items-center justify-center px-4 py-8">
 			<div className="w-full max-w-[640px] mx-auto">
 				<div className="space-y-2 text-center flex flex-col items-center">
-					<div className="mb-8">
+					<div className="mb-8 mt-16 sm:mt-8">
 						<Image src={Logo} width={128} alt="Web3Insight Logo" />
 					</div>
 					<h1 className="text-2xl md:text-3xl font-bold">

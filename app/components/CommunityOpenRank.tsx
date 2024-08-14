@@ -66,7 +66,7 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 				initialValue: node[1],
 				value: node[2],
 				name,
-				symbolSize: Math.log(node[2] + 1) * (isMobile ? 6 : 8),
+				symbolSize: Math.log(node[2] + 1) * (isMobile ? 6 : 10),
 				category: type,
 			};
 		});
@@ -94,14 +94,14 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 				text: `Community OpenRank Network - ${month}`,
 				top: "bottom",
 				left: "center",
-				textStyle: { fontSize: isMobile ? 12 : 14 },
+				textStyle: { fontSize: isMobile ? 12 : 16 },
 			},
 			legend: [
 				{
 					data: categories,
-					textStyle: { fontSize: isMobile ? 8 : 10 },
-					itemWidth: isMobile ? 8 : 10,
-					itemHeight: isMobile ? 8 : 10,
+					textStyle: { fontSize: isMobile ? 8 : 12 },
+					itemWidth: isMobile ? 8 : 12,
+					itemHeight: isMobile ? 8 : 12,
 				},
 			],
 			tooltip: { trigger: "item" },
@@ -117,12 +117,12 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 					label: {
 						position: "right",
 						show: true,
-						fontSize: isMobile ? 6 : 8,
+						fontSize: isMobile ? 6 : 10,
 					},
 					force: {
 						layoutAnimation: false,
-						repulsion: isMobile ? 150 : 200,
-						edgeLength: isMobile ? 20 : 30,
+						repulsion: isMobile ? 150 : 250,
+						edgeLength: isMobile ? 20 : 40,
 					},
 				},
 			],
@@ -143,13 +143,13 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 			.sort((a, b) => b.value - a.value);
 
 		return (
-			<div className="bordered p-2 h-[300px] md:h-[400px] overflow-y-auto">
-				<div className="scrollit h-[260px] md:h-[360px]">
-					<table className="w-full border-collapse text-xs">
+			<div className="bordered p-2 h-[300px] md:h-[500px] overflow-y-auto">
+				<div className="scrollit h-[260px] md:h-[460px]">
+					<table className="w-full border-collapse text-xs md:text-sm">
 						<thead>
 							<tr>
-								<th className="border p-1">Username</th>
-								<th className="border p-1">Score</th>
+								<th className="border p-1 md:p-2">Username</th>
+								<th className="border p-1 md:p-2">Score</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -168,7 +168,7 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 									tabIndex={0}
 									role="button"
 								>
-									<td className="border p-1">
+									<td className="border p-1 md:p-2">
 										<a
 											href={`https://github.com/${user.login}`}
 											target="_blank"
@@ -178,7 +178,7 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 											{user.login}
 										</a>
 									</td>
-									<td className="border p-1">{user.value.toFixed(3)}</td>
+									<td className="border p-1 md:p-2">{user.value.toFixed(3)}</td>
 								</tr>
 							))}
 						</tbody>
@@ -238,32 +238,24 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 				initial={{ opacity: 0, y: 20 }}
 				animate={{ opacity: 1, y: 0 }}
 				exit={{ opacity: 0, y: 20 }}
-				className="bordered p-2 h-[250px] md:h-[300px] overflow-y-auto"
+				className="bordered p-2 h-[250px] md:h-[350px] overflow-y-auto"
 			>
-				<div className="scrollit h-[210px] md:h-[260px]">
-					<table className="w-full border-collapse text-xs">
+				<div className="scrollit h-[210px] md:h-[310px]">
+					<table className="w-full border-collapse text-xs md:text-sm">
 						<thead>
 							<tr>
-								<th className="border p-1">Contributions</th>
-								<th className="border p-1">Score</th>
+								<th className="border p-1 md:p-2">Contributions</th>
+								<th className="border p-1 md:p-2">Score</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td className="border p-1">Self</td>
-								<td className="border p-1">
-									{selfNode
-										? (graphData.meta.retentionFactor * selfNode[1]).toFixed(3)
-										: "N/A"}
-								</td>
-							</tr>
 							{other.map((row, index) => (
 								<tr
 									key={`${row[0]}-${index}`}
 									className={index % 2 === 0 ? "bg-[#D6EEEE]" : ""}
 								>
-									<td className="border p-1">{row[0]}</td>
-									<td className="border p-1">{row[1]}</td>
+									<td className="border p-1 md:p-2">{row[0]}</td>
+									<td className="border p-1 md:p-2">{row[1]}</td>
 								</tr>
 							))}
 						</tbody>
@@ -275,7 +267,7 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 
 	return (
 		<div className="flex flex-col">
-			<h1 className="text-lg md:text-xl font-bold text-center mb-4">
+			<h1 className="text-lg md:text-2xl font-bold text-center mb-4">
 				Community OpenRank for {repoName}
 			</h1>
 			<div className="mb-3">
@@ -300,7 +292,7 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 				<div className="w-full md:w-1/2 md:pr-2 mb-3 md:mb-0">
 					{renderLeaderboard(graphData, selectedMonth)}
 				</div>
-				<div className="w-full md:w-1/2 md:pl-2 h-[300px] md:h-[400px] bordered">
+				<div className="w-full md:w-1/2 md:pl-2 h-[300px] md:h-[500px] bordered">
 					<ReactECharts
 						option={getChartOption(graphData, selectedMonth)}
 						style={{ height: "100%" }}
