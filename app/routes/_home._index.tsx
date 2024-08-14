@@ -212,7 +212,7 @@ export default function Index() {
 							size="lg"
 							isInvalid={!!errorMessage}
 							errorMessage={errorMessage}
-							placeholder="Enter a github username/repo, evm address, or just ask something"
+							placeholder="Enter a github info, address or just ask something"
 							variant="bordered"
 							required
 							name="query"

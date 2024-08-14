@@ -6,7 +6,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@nextui-org/react";
-import { Link } from "@remix-run/react";
+import { Link, useLocation } from "@remix-run/react";
 import { History } from "lucide-react";
 import Logo from "../images/logo.png";
 import { useMediaQuery } from "react-responsive";
@@ -19,27 +19,34 @@ export function NavToolbar(props: {
 }) {
 	const isDesktop = useMediaQuery({ minWidth: 1024 });
 	const isMobile = useMediaQuery({ maxWidth: 767 });
+	const location = useLocation();
+	const isHomePage = location.pathname === "/";
+	const isQueryPage = location.pathname.startsWith("/query/");
 
 	return (
 		<>
 			<SignedIn>
 				<div className="flex items-center justify-between w-full px-4 py-2 sm:px-6 lg:px-8 max-w-[1200px] mx-auto">
-					<div className="flex items-center">
+					<div className="flex items-center gap-4">
 						<UserButton />
-					</div>
-
-					<Link to="/" className="flex items-center gap-2">
-						<Image
-							src={Logo}
-							width={isDesktop ? 32 : 24}
-							alt="Web3Insight Logo"
-						/>
-						{!isMobile && (
-							<span className="text-sm font-bold text-gray-800">
-								Web3Insight
-							</span>
+						{!isHomePage && (
+							<Link
+								to="/"
+								className={`flex items-center gap-2 ${isQueryPage ? "absolute left-1/2 transform -translate-x-1/2" : ""}`}
+							>
+								<Image
+									src={Logo}
+									width={isDesktop ? 32 : 24}
+									alt="Web3Insight Logo"
+								/>
+								{!isMobile && (
+									<span className="text-sm font-bold text-gray-800">
+										Web3Insight
+									</span>
+								)}
+							</Link>
 						)}
-					</Link>
+					</div>
 
 					<div className="flex items-center">
 						<Popover placement="bottom-end" radius="sm">
@@ -72,7 +79,10 @@ export function NavToolbar(props: {
 			</SignedIn>
 			<SignedOut>
 				<div className="flex justify-between items-center w-full px-4 py-2 sm:px-6 lg:px-8 max-w-[1200px] mx-auto">
-					<Link to="/" className="flex items-center gap-2">
+					<Link
+						to="/"
+						className={`flex items-center gap-2 ${isQueryPage ? "absolute left-1/2 transform -translate-x-1/2" : ""}`}
+					>
 						<Image
 							src={Logo}
 							width={isDesktop ? 32 : 24}

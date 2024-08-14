@@ -236,6 +236,8 @@ export default function QueryPage() {
 		loaderData.communityOpenRankData,
 	]);
 
+	const isGithubUser = loaderData.keyword && !loaderData.keyword.includes("/");
+
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
 			<div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-32 pb-12">
@@ -323,7 +325,7 @@ export default function QueryPage() {
 							initial={{ opacity: 0, scale: 0.9 }}
 							animate={{ opacity: 1, scale: 1 }}
 							transition={{ duration: 0.5, delay: 0.8 }}
-							className="w-full sm:w-1/2 px-2 sm:px-3 mb-4 sm:mb-6"
+							className={`w-full ${isGithubUser ? "" : "sm:w-1/2"} px-2 sm:px-3 mb-4 sm:mb-6`}
 						>
 							<div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
 								{isChartLoading ? (
@@ -394,7 +396,7 @@ export default function QueryPage() {
 					<fetcher.Form method="POST" action="/?index">
 						<div className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
 							<Input
-								placeholder="Ask a follow-up question..."
+								placeholder="Evaluate a new one..."
 								variant="bordered"
 								required
 								name="query"
