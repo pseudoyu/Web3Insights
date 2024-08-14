@@ -181,67 +181,66 @@ export default function Index() {
 	}, [fetcher.state, errorMessage, errorType]);
 
 	return (
-		<div className="h-dvh">
-			<div className="max-w-[640px] mx-auto flex justify-center items-center h-full px-5 md:px-0">
-				<div className="w-full">
-					<div className="space-y-2 text-center flex flex-col items-center">
-						<div className="mb-8">
-							<Image src={Logo} width={128} />
-						</div>
-						<h1 className="text-3xl font-bold">
-							An intelligent metric system for Web3 developers, users and
-							projects
-						</h1>
+		<div className="min-h-dvh flex items-center justify-center px-4 py-8">
+			<div className="w-full max-w-[640px] mx-auto">
+				<div className="space-y-2 text-center flex flex-col items-center">
+					<div className="mb-8">
+						<Image src={Logo} width={128} alt="Web3Insight Logo" />
 					</div>
+					<h1 className="text-2xl md:text-3xl font-bold">
+						An intelligent metric system for Web3 developers, users and projects
+					</h1>
+				</div>
 
-					<fetcher.Form method="POST" action="?index">
-						<div className="mt-12 flex flex-col gap-2 items-center">
-							<Input
-								endContent={
-									<Button
-										isLoading={asking}
-										startContent={
-											asking ? null : <Search size={16} strokeWidth={1.5} />
-										}
-										size="sm"
-										type="submit"
-										color="primary"
-										isIconOnly
-									/>
-								}
-								description="Insight data for Web3 open-source projects, developers and users"
-								size="lg"
-								isInvalid={!!errorMessage}
-								errorMessage={errorMessage}
-								placeholder="enter a github username/repo, evm address, or just ask something"
-								variant="bordered"
-								required
-								name="query"
-								type="text"
-							/>
-						</div>
-					</fetcher.Form>
-
-					<div className="mt-8">
-						<div className="flex gap-3 items-center justify-center flex-wrap">
-							{pinned.map((query) => (
-								<Link to={`/query/${query.id}`} key={query.id}>
-									<Code className="text-xs">{query.query}</Code>
-								</Link>
-							))}
-						</div>
+				<fetcher.Form method="POST" action="?index" className="mt-8">
+					<div className="flex flex-col gap-2 items-center">
+						<Input
+							endContent={
+								<Button
+									isLoading={asking}
+									startContent={
+										asking ? null : <Search size={16} strokeWidth={1.5} />
+									}
+									size="sm"
+									type="submit"
+									color="primary"
+									isIconOnly
+									className="min-w-[40px]"
+								/>
+							}
+							description="Insight data for Web3 open-source projects, developers and users"
+							size="lg"
+							isInvalid={!!errorMessage}
+							errorMessage={errorMessage}
+							placeholder="Enter a github username/repo, evm address, or just ask something"
+							variant="bordered"
+							required
+							name="query"
+							type="text"
+							className="max-w-full"
+						/>
 					</div>
+				</fetcher.Form>
 
-					<div className="mt-24 text-center font-medium">
-						Supported by{" "}
-						<a href="https://openbuild.xyz/" className="underline">
-							OpenBuild
-						</a>{" "}
-						&{" "}
-						<a href="https://rss3.io/" className="underline">
-							RSS3
-						</a>
+				<div className="mt-8">
+					<div className="flex gap-3 items-center justify-center flex-wrap">
+						{pinned.map((query) => (
+							<Link to={`/query/${query.id}`} key={query.id}>
+								<Code className="text-xs">{query.query}</Code>
+							</Link>
+						))}
 					</div>
+				</div>
+
+				<div className="mt-12 text-center font-medium">
+					Supported by{" "}
+					<a href="https://openbuild.xyz/" className="underline">
+						OpenBuild
+					</a>{" "}
+					&{" "}
+					<a href="https://rss3.io/" className="underline">
+						RSS3
+					</a>
 				</div>
 			</div>
 		</div>

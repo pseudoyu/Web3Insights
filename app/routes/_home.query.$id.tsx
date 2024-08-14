@@ -238,12 +238,12 @@ export default function QueryPage() {
 
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-			<div className="max-w-[1200px] mx-auto px-6 md:px-0 pt-24 pb-12">
+			<div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24 pb-12">
 				<motion.h2
 					initial={{ opacity: 0, y: -20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.5 }}
-					className="font-bold text-4xl mb-4 text-gray-800"
+					className="font-bold text-2xl sm:text-4xl mb-4 text-gray-800"
 				>
 					{loaderData.query}
 				</motion.h2>
@@ -253,7 +253,11 @@ export default function QueryPage() {
 					transition={{ duration: 0.5, delay: 0.2 }}
 					className="mb-6"
 				>
-					<Code size="sm" className="text-sm px-3 py-1" radius="full">
+					<Code
+						size="sm"
+						className="text-xs sm:text-sm px-2 sm:px-3 py-1"
+						radius="full"
+					>
 						{loaderData.keyword}
 					</Code>
 				</motion.div>
@@ -262,7 +266,7 @@ export default function QueryPage() {
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
 					transition={{ duration: 0.5, delay: 0.4 }}
-					className="mb-10 bg-white rounded-xl shadow-lg p-6"
+					className="mb-8 sm:mb-10 bg-white rounded-xl shadow-lg p-4 sm:p-6"
 				>
 					<AnimatePresence mode="wait">
 						{!result ? (
@@ -281,7 +285,7 @@ export default function QueryPage() {
 								animate={{ opacity: 1 }}
 								transition={{ duration: 0.5 }}
 							>
-								<div className="text-gray-800 leading-relaxed">
+								<div className="text-sm sm:text-base text-gray-800 leading-relaxed">
 									<Markdown>{parsedAnswer}</Markdown>
 								</div>
 							</motion.div>
@@ -289,7 +293,7 @@ export default function QueryPage() {
 					</AnimatePresence>
 				</motion.div>
 
-				<div className="flex flex-wrap -mx-3">
+				<div className="flex flex-wrap -mx-2 sm:-mx-3">
 					{loaderData.communityOpenRankData &&
 						loaderData.keyword &&
 						loaderData.keyword.includes("/") && (
@@ -297,11 +301,11 @@ export default function QueryPage() {
 								initial={{ opacity: 0, scale: 0.9 }}
 								animate={{ opacity: 1, scale: 1 }}
 								transition={{ duration: 0.5, delay: 0.6 }}
-								className="w-full px-3 mb-6"
+								className="w-full px-2 sm:px-3 mb-4 sm:mb-6"
 							>
-								<div className="bg-white rounded-xl shadow-lg p-6">
+								<div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
 									{isChartLoading ? (
-										<div className="flex justify-center items-center h-[800px]">
+										<div className="flex justify-center items-center h-[400px] sm:h-[800px]">
 											<Spinner size="lg" color="primary" />
 										</div>
 									) : (
@@ -319,11 +323,11 @@ export default function QueryPage() {
 							initial={{ opacity: 0, scale: 0.9 }}
 							animate={{ opacity: 1, scale: 1 }}
 							transition={{ duration: 0.5, delay: 0.8 }}
-							className="w-full md:w-1/2 px-3 mb-6"
+							className="w-full sm:w-1/2 px-2 sm:px-3 mb-4 sm:mb-6"
 						>
-							<div className="bg-white rounded-xl shadow-lg p-6">
+							<div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
 								{isChartLoading ? (
-									<div className="flex justify-center items-center h-[400px]">
+									<div className="flex justify-center items-center h-[300px] sm:h-[400px]">
 										<Spinner size="lg" color="primary" />
 									</div>
 								) : (
@@ -341,11 +345,11 @@ export default function QueryPage() {
 							initial={{ opacity: 0, scale: 0.9 }}
 							animate={{ opacity: 1, scale: 1 }}
 							transition={{ duration: 0.5, delay: 1 }}
-							className="w-full md:w-1/2 px-3 mb-6"
+							className="w-full sm:w-1/2 px-2 sm:px-3 mb-4 sm:mb-6"
 						>
-							<div className="bg-white rounded-xl shadow-lg p-6">
+							<div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
 								{isChartLoading ? (
-									<div className="flex justify-center items-center h-[400px]">
+									<div className="flex justify-center items-center h-[300px] sm:h-[400px]">
 										<Spinner size="lg" color="primary" />
 									</div>
 								) : (
@@ -363,11 +367,11 @@ export default function QueryPage() {
 							initial={{ opacity: 0, scale: 0.9 }}
 							animate={{ opacity: 1, scale: 1 }}
 							transition={{ duration: 0.5, delay: 1.2 }}
-							className="w-full px-3 mb-6"
+							className="w-full px-2 sm:px-3 mb-4 sm:mb-6"
 						>
-							<div className="bg-white rounded-xl shadow-lg p-6">
+							<div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
 								{isChartLoading ? (
-									<div className="flex justify-center items-center h-[400px]">
+									<div className="flex justify-center items-center h-[300px] sm:h-[400px]">
 										<Spinner size="lg" color="primary" />
 									</div>
 								) : (
@@ -385,10 +389,10 @@ export default function QueryPage() {
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.5, delay: 1.4 }}
-					className="mt-12"
+					className="mt-8 sm:mt-12"
 				>
 					<fetcher.Form method="POST" action="/?index">
-						<div className="flex gap-2 items-center">
+						<div className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
 							<Input
 								placeholder="Ask a follow-up question..."
 								variant="bordered"
@@ -402,6 +406,7 @@ export default function QueryPage() {
 								startContent={asking ? null : <Sparkles />}
 								type="submit"
 								color="primary"
+								className="w-full sm:w-auto"
 							>
 								Ask
 							</Button>
