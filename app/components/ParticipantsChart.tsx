@@ -1,4 +1,4 @@
-import React from "react";
+import type { FC } from "react";
 import ReactECharts from "echarts-for-react";
 import { useMediaQuery } from "react-responsive";
 
@@ -11,10 +11,7 @@ interface ParticipantsChartProps {
 	repoName: string;
 }
 
-const ParticipantsChart: React.FC<ParticipantsChartProps> = ({
-	data,
-	repoName,
-}) => {
+const ParticipantsChart: FC<ParticipantsChartProps> = ({ data, repoName }) => {
 	const isMobile = useMediaQuery({ maxWidth: 767 });
 	const keys = Object.keys(data.participants).filter((k) => k.length === 7);
 
@@ -22,13 +19,13 @@ const ParticipantsChart: React.FC<ParticipantsChartProps> = ({
 		title: {
 			text: `Developer status for ${repoName}`,
 			left: "center",
-			top: "bottom",
+			top: "top",
 			textStyle: {
 				fontSize: isMobile ? 14 : 18,
 			},
 		},
 		grid: {
-			top: isMobile ? 60 : 80,
+			top: isMobile ? 100 : 120,
 			bottom: isMobile ? 60 : 80,
 			left: isMobile ? 40 : 80,
 			right: isMobile ? 20 : 40,
@@ -38,20 +35,23 @@ const ParticipantsChart: React.FC<ParticipantsChartProps> = ({
 			data: keys,
 			axisLabel: {
 				rotate: isMobile ? 45 : 0,
-				fontSize: isMobile ? 10 : 12,
+				fontSize: isMobile ? 8 : 12,
 			},
 		},
 		yAxis: {
 			type: "value",
 			axisLabel: {
-				fontSize: isMobile ? 10 : 12,
+				fontSize: isMobile ? 8 : 12,
 			},
 		},
 		legend: {
 			data: ["participants", "newContributors", "inactiveContributors"],
 			textStyle: {
-				fontSize: isMobile ? 10 : 12,
+				fontSize: isMobile ? 8 : 12,
 			},
+			itemWidth: isMobile ? 10 : 25,
+			itemHeight: isMobile ? 10 : 14,
+			top: isMobile ? 40 : 50,
 		},
 		series: [
 			{

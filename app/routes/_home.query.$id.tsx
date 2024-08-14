@@ -90,7 +90,7 @@ async function fetchCommunityOpenRankData(repoName: string) {
 		const recentMonths = sortedMonths.slice(0, 6);
 
 		// Create a new object with only the recent months' data
-		const recentData = {};
+		const recentData: Record<string, any> = {};
 		recentMonths.forEach((month) => {
 			recentData[month] = data.data[month];
 		});
@@ -238,7 +238,7 @@ export default function QueryPage() {
 
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-			<div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24 pb-12">
+			<div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-32 pb-12">
 				<motion.h2
 					initial={{ opacity: 0, y: -20 }}
 					animate={{ opacity: 1, y: 0 }}

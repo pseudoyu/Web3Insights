@@ -267,26 +267,35 @@ const CommunityOpenRank: FC<CommunityOpenRankProps> = ({
 
 	return (
 		<div className="flex flex-col">
-			<h1 className="text-lg md:text-2xl font-bold text-center mb-4">
-				Community OpenRank for {repoName}
-			</h1>
-			<div className="mb-3">
-				<Select
-					label="Select Month"
-					placeholder="Select a month"
-					selectedKeys={[selectedMonth]}
-					onChange={(e) => setSelectedMonth(e.target.value)}
-					className="max-w-xs mx-auto"
-					size="sm"
-					variant="bordered"
-					color="primary"
+			<div className="flex justify-between items-center mb-4">
+				<h1 className="text-lg md:text-2xl font-bold">
+					<span className="hidden md:inline">
+						Community OpenRank for {repoName}
+					</span>
+					<span className="md:hidden">Community OpenRank</span>
+				</h1>
+				<motion.div
+					initial={{ opacity: 0, x: 20 }}
+					animate={{ opacity: 1, x: 0 }}
+					transition={{ duration: 0.3 }}
 				>
-					{availableMonths.map((month) => (
-						<SelectItem key={month} value={month}>
-							{month}
-						</SelectItem>
-					))}
-				</Select>
+					<Select
+						label="Month"
+						placeholder="Select"
+						selectedKeys={[selectedMonth]}
+						onChange={(e) => setSelectedMonth(e.target.value)}
+						className="w-32"
+						size="sm"
+						variant="bordered"
+						color="primary"
+					>
+						{availableMonths.map((month) => (
+							<SelectItem key={month} value={month}>
+								{month}
+							</SelectItem>
+						))}
+					</Select>
+				</motion.div>
 			</div>
 			<div className="flex flex-col md:flex-row mb-3">
 				<div className="w-full md:w-1/2 md:pr-2 mb-3 md:mb-0">
