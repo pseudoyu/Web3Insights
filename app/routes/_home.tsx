@@ -12,7 +12,7 @@ import {
 import { json, LoaderFunctionArgs } from "@remix-run/node";
 import { prisma } from "~/prisma.server";
 import Logo from "../images/logo.png";
-import { Outlet, useLoaderData } from "@remix-run/react";
+import { Outlet, useLoaderData, useLocation } from "@remix-run/react";
 import { NavToolbar } from "~/components/NavToolbar";
 import { useAtom } from "jotai";
 import { signinModalOpenAtom } from "~/atoms";
@@ -59,9 +59,12 @@ export const loader = async (ctx: LoaderFunctionArgs) => {
 	});
 };
 
-export default function () {
+export default function Layout() {
 	const loaderData = useLoaderData<typeof loader>();
 	const [signinModalOpen, setSigninModalOpen] = useAtom(signinModalOpenAtom);
+	const location = useLocation();
+
+	const isQueryPage = location.pathname.startsWith("/query/");
 
 	return (
 		<>
@@ -98,7 +101,9 @@ export default function () {
 
 			<div>
 				<nav className="py-3 top-0 fixed left-0 right-0 bg-white border-b">
-					<div className="max-w-[640px] mx-auto flex justify-between px-5 md:px-0">
+					<div
+						className={`mx-auto flex justify-between ${isQueryPage ? "max-w-[1200px] px-4 sm:px-6 lg:px-8" : "max-w-[640px] px-5 md:px-0"}`}
+					>
 						<SignedIn>
 							<div className="w-full">
 								<NavToolbar history={loaderData.history} />
