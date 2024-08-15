@@ -37,11 +37,11 @@ export function NavToolbar(props: {
 								<Image
 									src={Logo}
 									width={isDesktop ? 32 : 24}
-									alt="Web3Insight Logo"
+									alt="Web3Insights Logo"
 								/>
 								{!isMobile && (
 									<span className="text-sm font-bold text-gray-800">
-										Web3Insight
+										Web3Insights
 									</span>
 								)}
 							</Link>
@@ -86,11 +86,11 @@ export function NavToolbar(props: {
 						<Image
 							src={Logo}
 							width={isDesktop ? 32 : 24}
-							alt="Web3Insight Logo"
+							alt="Web3Insights Logo"
 						/>
 						{!isMobile && (
 							<span className="text-sm font-bold text-gray-800">
-								Web3Insight
+								Web3Insights
 							</span>
 						)}
 					</Link>

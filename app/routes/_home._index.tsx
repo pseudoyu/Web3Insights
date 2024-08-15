@@ -25,10 +25,10 @@ export enum ErrorType {
 
 export const meta: MetaFunction = () => {
 	return [
-		{ title: "Web3Insight" },
+		{ title: "Web3Insights" },
 		{
 			property: "og:title",
-			content: "Web3Insight",
+			content: "Web3Insights",
 		},
 		{
 			name: "description",
@@ -185,7 +185,7 @@ export default function Index() {
 			<div className="w-full max-w-[640px] mx-auto">
 				<div className="space-y-2 text-center flex flex-col items-center">
 					<div className="mb-8 mt-16 sm:mt-8">
-						<Image src={Logo} width={128} alt="Web3Insight Logo" />
+						<Image src={Logo} width={128} alt="Web3Insights Logo" />
 					</div>
 					<h1 className="text-2xl md:text-3xl font-bold">
 						An intelligent metric system for Web3 developers, users and projects

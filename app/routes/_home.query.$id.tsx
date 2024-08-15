@@ -25,7 +25,7 @@ import { isAddress } from "viem";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-	const title = data ? `${data.query} - Web3Insight` : "Web3Insight";
+	const title = data ? `${data.query} - Web3Insights` : "Web3Insights";
 	const answer = data?.answer;
 
 	return [
