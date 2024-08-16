@@ -9,8 +9,16 @@ import { useEffect, useMemo, useState } from "react";
 import { prisma } from "~/prisma.server";
 import { useEventSource } from "remix-utils/sse/react";
 import Markdown from "react-markdown";
-import { Button, Code, Input, Skeleton, Spinner } from "@nextui-org/react";
-import { Sparkles } from "lucide-react";
+import {
+	Button,
+	Code,
+	Input,
+	Skeleton,
+	Spinner,
+	Link,
+	Chip,
+} from "@nextui-org/react";
+import { Sparkles, ExternalLink, BadgeCent } from "lucide-react";
 import { Footer } from "~/components/Footer";
 import { getAuth } from "@clerk/remix/ssr.server";
 import { useAtom } from "jotai";
@@ -23,6 +31,7 @@ import CommunityOpenRank from "~/components/CommunityOpenRank";
 import axios from "axios";
 import { isAddress } from "viem";
 import { motion, AnimatePresence } from "framer-motion";
+import { projectsData } from "~/data/projects";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
 	const title = data ? `${data.query} - Web3Insights` : "Web3Insights";
@@ -35,7 +44,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 			name: "description",
 			content: answer
 				? `${answer.slice(0, 300)}...`
-				: "A comprehensive metric system for evaluating Web3 open-source projects and developers.",
+				: "A comprehensive metric system for evaluating Web3 Ecosystems, Communities and Repos.",
 		},
 	];
 };
@@ -147,23 +156,26 @@ export const loader = async (ctx: LoaderFunctionArgs) => {
 	let attentionData = null;
 	let participantsData = null;
 	let communityOpenRankData = null;
+	let projectData = null;
 	if (query.keyword) {
 		const type =
 			isAddress(query.keyword) || query.keyword.endsWith(".eth")
 				? "evm"
 				: query.keyword.includes("/")
 					? "github_repo"
-					: "github_user";
+					: "other";
 
-		if (type === "github_user" || type === "github_repo") {
+		if (type === "github_repo") {
 			const openDiggerName = `github/${query.keyword}`;
 			openRankData = await fetchOpenDiggerData(openDiggerName, "openrank");
-			if (type === "github_repo") {
-				attentionData = await fetchOpenDiggerData(openDiggerName, "attention");
-				participantsData = await fetchParticipantsData(query.keyword);
-				communityOpenRankData = await fetchCommunityOpenRankData(query.keyword);
-			}
+			attentionData = await fetchOpenDiggerData(openDiggerName, "attention");
+			participantsData = await fetchParticipantsData(query.keyword);
+			communityOpenRankData = await fetchCommunityOpenRankData(query.keyword);
 		}
+
+		projectData = Object.entries(projectsData).find(
+			([key, data]) => data.name.toLowerCase() === query.keyword.toLowerCase(),
+		)?.[1];
 	}
 
 	return json({
@@ -176,6 +188,7 @@ export const loader = async (ctx: LoaderFunctionArgs) => {
 		attentionData,
 		participantsData,
 		communityOpenRankData,
+		projectData,
 	});
 };
 
@@ -236,7 +249,7 @@ export default function QueryPage() {
 		loaderData.communityOpenRankData,
 	]);
 
-	const isGithubUser = loaderData.keyword && !loaderData.keyword.includes("/");
+	const isGithubRepo = loaderData.keyword?.includes("/");
 
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
@@ -264,45 +277,267 @@ export default function QueryPage() {
 					</Code>
 				</motion.div>
 
-				<motion.div
-					initial={{ opacity: 0 }}
-					animate={{ opacity: 1 }}
-					transition={{ duration: 0.5, delay: 0.4 }}
-					className="mb-8 sm:mb-10 bg-white rounded-xl shadow-lg p-4 sm:p-6"
-				>
-					<AnimatePresence mode="wait">
-						{!result ? (
-							<motion.div
-								key="placeholder"
-								initial={{ opacity: 0 }}
-								animate={{ opacity: 1 }}
-								exit={{ opacity: 0 }}
-							>
-								<Placeholder />
-							</motion.div>
-						) : (
-							<motion.div
-								key="content"
-								initial={{ opacity: 0 }}
-								animate={{ opacity: 1 }}
-								transition={{ duration: 0.5 }}
-							>
-								<div className="text-sm sm:text-base text-gray-800 leading-relaxed">
-									<Markdown>{parsedAnswer}</Markdown>
+				{loaderData.projectData && (
+					<motion.div
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						transition={{ duration: 0.5, delay: 0.4 }}
+						className="mb-8 sm:mb-10 bg-white rounded-xl shadow-lg p-4 sm:p-6"
+					>
+						<div className="flex justify-between items-center">
+							<div className="flex-grow">
+								<h3 className="text-2xl font-semibold mb-2">
+									{loaderData.projectData.name}
+								</h3>
+								<p className="text-sm text-gray-600 mb-4">
+									{loaderData.projectData.description}
+								</p>
+								<div className="flex items-center space-x-4">
+									<Chip
+										color={
+											loaderData.projectData.type === "ecosystem"
+												? "primary"
+												: "secondary"
+										}
+										size="sm"
+									>
+										{loaderData.projectData.type}
+									</Chip>
+									<Link
+										href={loaderData.projectData.website}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="flex items-center text-sm text-blue-600 hover:underline transition-colors duration-200"
+									>
+										<ExternalLink size={14} className="mr-1" />
+										Website
+									</Link>
 								</div>
-							</motion.div>
-						)}
-					</AnimatePresence>
-				</motion.div>
+							</div>
+							<img
+								src={loaderData.projectData.logo}
+								alt={loaderData.projectData.name}
+								className="w-24 h-24 object-contain ml-4"
+							/>
+						</div>
+					</motion.div>
+				)}
+
+				{loaderData.projectData?.type !== "ecosystem" &&
+					loaderData.projectData?.type !== "community" && (
+						<motion.div
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							transition={{ duration: 0.5, delay: 0.6 }}
+							className="mb-8 sm:mb-10 bg-white rounded-xl shadow-lg p-4 sm:p-6"
+						>
+							<AnimatePresence mode="wait">
+								{!result ? (
+									<motion.div
+										key="placeholder"
+										initial={{ opacity: 0 }}
+										animate={{ opacity: 1 }}
+										exit={{ opacity: 0 }}
+									>
+										<Placeholder />
+									</motion.div>
+								) : (
+									<motion.div
+										key="content"
+										initial={{ opacity: 0 }}
+										animate={{ opacity: 1 }}
+										transition={{ duration: 0.5 }}
+									>
+										<div className="text-sm sm:text-base text-gray-800 leading-relaxed">
+											<Markdown>{parsedAnswer}</Markdown>
+										</div>
+									</motion.div>
+								)}
+							</AnimatePresence>
+						</motion.div>
+					)}
+
+				{loaderData.projectData && (
+					<motion.div
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ duration: 0.5, delay: 0.8 }}
+						className="mb-8 sm:mb-10 bg-white rounded-xl shadow-lg p-6 sm:p-8"
+					>
+						<div className="flex flex-col lg:flex-row gap-8">
+							{/* Core Contributors */}
+							<div className="w-full lg:w-1/2">
+								<h3 className="text-xl font-semibold mb-4 text-gray-800">
+									Core Contributors
+								</h3>
+								<div className="h-[400px] overflow-y-auto border border-gray-200 rounded-lg shadow-sm">
+									<table className="w-full border-collapse text-sm">
+										<thead className="bg-gray-50 sticky top-0 z-10">
+											<tr>
+												<th className="p-2 text-center text-gray-600 font-semibold border-b border-gray-200 w-16">
+													No.
+												</th>
+												<th className="p-3 text-center text-gray-600 font-semibold border-b border-gray-200">
+													Contributor
+												</th>
+												<th className="p-3 text-center text-gray-600 font-semibold border-b border-gray-200">
+													Action
+												</th>
+											</tr>
+										</thead>
+										<tbody className="relative">
+											<AnimatePresence>
+												{loaderData.projectData.core_contributors.map(
+													(contributor, index) => (
+														<motion.tr
+															key={contributor}
+															initial={{ opacity: 0, y: 10 }}
+															animate={{ opacity: 1, y: 0 }}
+															exit={{ opacity: 0, y: -10 }}
+															transition={{
+																duration: 0.3,
+																delay: index * 0.05,
+															}}
+															className="transition-colors duration-200 ease-in-out hover:bg-gray-50 border-b border-gray-100 last:border-b-0"
+														>
+															<td className="p-2 border-r border-gray-100">
+																<div className="font-medium text-center">
+																	{index + 1}
+																</div>
+															</td>
+															<td className="p-3 text-center">
+																<a
+																	href={`https://github.com/${contributor}`}
+																	target="_blank"
+																	rel="noopener noreferrer"
+																	className="text-blue-600 hover:underline flex items-center justify-center"
+																>
+																	<span>{contributor}</span>
+																	<ExternalLink
+																		size={14}
+																		className="ml-1 text-gray-400"
+																	/>
+																</a>
+															</td>
+															<td className="p-3 text-center">
+																<div className="flex justify-center space-x-2">
+																	<Button
+																		isIconOnly
+																		size="sm"
+																		color="secondary"
+																		aria-label="Reward"
+																		isDisabled
+																		title="Reward (Soon)"
+																		className="text-white"
+																	>
+																		<BadgeCent size={16} />
+																	</Button>
+																</div>
+															</td>
+														</motion.tr>
+													),
+												)}
+											</AnimatePresence>
+										</tbody>
+									</table>
+								</div>
+							</div>
+
+							{/* Core Repositories */}
+							<div className="w-full lg:w-1/2">
+								<h3 className="text-xl font-semibold mb-4 text-gray-800">
+									Core Repositories
+								</h3>
+								<div className="h-[400px] overflow-y-auto border border-gray-200 rounded-lg shadow-sm">
+									<table className="w-full border-collapse text-sm">
+										<thead className="bg-gray-50 sticky top-0 z-10">
+											<tr>
+												<th className="p-2 text-center text-gray-600 font-semibold border-b border-gray-200 w-16">
+													No.
+												</th>
+												<th className="p-3 text-center text-gray-600 font-semibold border-b border-gray-200">
+													Repository
+												</th>
+												<th className="p-3 text-center text-gray-600 font-semibold border-b border-gray-200">
+													Action
+												</th>
+											</tr>
+										</thead>
+										<tbody className="relative">
+											<AnimatePresence>
+												{loaderData.projectData.core_repos.map(
+													(repo, index) => (
+														<motion.tr
+															key={repo}
+															initial={{ opacity: 0, y: 10 }}
+															animate={{ opacity: 1, y: 0 }}
+															exit={{ opacity: 0, y: -10 }}
+															transition={{
+																duration: 0.3,
+																delay: index * 0.05,
+															}}
+															className="transition-colors duration-200 ease-in-out hover:bg-gray-50 border-b border-gray-100 last:border-b-0"
+														>
+															<td className="p-2 border-r border-gray-100">
+																<div className="font-medium text-center">
+																	{index + 1}
+																</div>
+															</td>
+															<td className="p-3 text-center">
+																<a
+																	href={`https://github.com/${repo}`}
+																	target="_blank"
+																	rel="noopener noreferrer"
+																	className="text-blue-600 hover:underline flex items-center justify-center"
+																>
+																	<span>{repo}</span>
+																	<ExternalLink
+																		size={14}
+																		className="ml-1 text-gray-400"
+																	/>
+																</a>
+															</td>
+															<td className="p-3 text-center">
+																<div className="flex justify-center space-x-2">
+																	<Button
+																		isIconOnly
+																		size="sm"
+																		color="primary"
+																		aria-label="Analysis"
+																		className="text-white"
+																		title="Analysis"
+																		onClick={() => {
+																			const newQuery = `Analyze the GitHub repository ${repo}`;
+																			fetcher.submit(
+																				{ query: newQuery },
+																				{ method: "post", action: "/?index" },
+																			);
+																		}}
+																	>
+																		<Sparkles size={16} />
+																	</Button>
+																</div>
+															</td>
+														</motion.tr>
+													),
+												)}
+											</AnimatePresence>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</motion.div>
+				)}
 
 				<div className="flex flex-wrap -mx-2 sm:-mx-3">
 					{loaderData.communityOpenRankData &&
 						loaderData.keyword &&
-						loaderData.keyword.includes("/") && (
+						isGithubRepo && (
 							<motion.div
 								initial={{ opacity: 0, scale: 0.9 }}
 								animate={{ opacity: 1, scale: 1 }}
-								transition={{ duration: 0.5, delay: 0.6 }}
+								transition={{ duration: 0.5, delay: 1.2 }}
 								className="w-full px-2 sm:px-3 mb-4 sm:mb-6"
 							>
 								<div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
@@ -325,7 +560,7 @@ export default function QueryPage() {
 							initial={{ opacity: 0, scale: 0.9 }}
 							animate={{ opacity: 1, scale: 1 }}
 							transition={{ duration: 0.5, delay: 0.8 }}
-							className={`w-full ${isGithubUser ? "" : "sm:w-1/2"} px-2 sm:px-3 mb-4 sm:mb-6`}
+							className="w-full sm:w-1/2 px-2 sm:px-3 mb-4 sm:mb-6"
 						>
 							<div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
 								{isChartLoading ? (
@@ -402,6 +637,8 @@ export default function QueryPage() {
 								name="query"
 								type="text"
 								className="flex-grow"
+								isInvalid={!!errorMessage}
+								errorMessage={errorMessage}
 							/>
 							<Button
 								isLoading={asking}

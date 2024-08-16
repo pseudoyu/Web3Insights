@@ -11,6 +11,6 @@ export const guestSearchLimiter = new RateLimiterRedis({
 export const userSearchLimiter = new RateLimiterRedis({
 	storeClient: redis,
 	keyPrefix: "user_search_limiter",
-	points: 50,
+	points: 200,
 	duration: 60 * 60 * 24, // 1 day
 });

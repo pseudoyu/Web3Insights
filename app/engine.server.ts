@@ -193,26 +193,30 @@ export async function getSearchKeyword(question: string) {
 		messages: [
 			{
 				role: "system",
-				content: `You are a search expert specializing in extracting GitHub-related information and Web3 addresses from questions. Follow these rules:
+				content: `You are a search expert specializing in extracting blockchain/crypto ecosystem names, community names, GitHub repo names, and Web3 addresses from questions. Follow these rules:
 
-				1. GitHub Usernames:
-					- If the question is about a user's open source activities, contributions, or performance, extract just the username.
-					- Examples: "pseudoyu's open source performance" or "open source activities of pseudoyu" should return "pseudoyu".
+				1. Ecosystem names:
+					- Only return "starknet" if explicitly mentioned.
+					- Do not return anything for other ecosystems.
 
-				2. GitHub Repositories:
-					- If the question is about a specific repository, return it in the format {user/repo}.
-					- Example: "analyze the performance and influence of pseudoyu/yu-tools" should return "pseudoyu/yu-tools".
+				2. Community names:
+					- Only return "openbuild" if explicitly mentioned.
+					- Do not return anything for other communities.
 
-				3. EVM Addresses or ENS Domains:
-					- If an EVM address or ENS domain is mentioned, return that.
+				3. GitHub Repositories:
+					- If a specific repository is mentioned, return it in the format {user/repo}.
+					- Example: "pseudoyu/yu-tools" for "analyze pseudoyu/yu-tools".
 
-				4. Combination:
-					- If the question contains multiple elements, prioritize in this order: Repository > Username > EVM Address/ENS Domain.
+				4. EVM Addresses or ENS Domains:
+					- Return the exact EVM address or ENS domain if mentioned.
 
-				5. Unclear Cases:
-					- If the type is unclear, make your best guess based on the context.
+				5. Prioritization:
+					- If multiple elements are present, prioritize: Ecosystem > Community > Repository > EVM Address/ENS Domain.
 
-				Always return only the extracted information without any additional text or explanation.`,
+				6. Match:
+					- If the query doesn't match any of the above categories, return an empty string.
+
+				Return only the extracted information without any additional text or explanation. If no valid match is found, return an empty string.`,
 			},
 			{
 				role: "user",

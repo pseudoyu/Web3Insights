@@ -33,7 +33,7 @@ export const meta: MetaFunction = () => {
 		{
 			name: "description",
 			content:
-				"A comprehensive metric system for evaluating Web3 open-source projects and developers.",
+				"A comprehensive metric system for evaluating Web3 Ecosystems, Communities and Repos.",
 		},
 	];
 };
@@ -122,7 +122,7 @@ export const action = async (ctx: ActionFunctionArgs) => {
 
 	if (!keyword) {
 		return json(
-			{ error: "No keyword found", type: ErrorType.Basic },
+			{ error: "Not supported yet", type: ErrorType.Basic },
 			{ status: 400 },
 		);
 	}
@@ -188,7 +188,8 @@ export default function Index() {
 						<Image src={Logo} width={128} alt="Web3Insights Logo" />
 					</div>
 					<h1 className="text-2xl md:text-3xl font-bold">
-						An intelligent metric system for Web3 developers, users and projects
+						An intelligent metric system for evaluating Web3 Ecosystems,
+						Communities and Repos.
 					</h1>
 				</div>
 
@@ -208,11 +209,11 @@ export default function Index() {
 									className="min-w-[40px]"
 								/>
 							}
-							description="Insight data for Web3 open-source projects, developers and users"
+							description="Insight data for Web3 Ecosystems, Communities and Repos."
 							size="lg"
 							isInvalid={!!errorMessage}
 							errorMessage={errorMessage}
-							placeholder="Enter a github info, address or just ask something"
+							placeholder="Ecosystem, Community, Repo, Address, ..."
 							variant="bordered"
 							required
 							name="query"
