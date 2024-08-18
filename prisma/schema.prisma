@@ -31,3 +31,39 @@ model User {
   updatedAt   DateTime @updatedAt
   queries     Query[]
 }
+
+model Project {
+  id                String   @id @default(cuid())
+  name              String
+  description       String
+  type              String
+  logo              String
+  website           String
+  coreContributors  String[]
+  coreRepos         String[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Developer {
+  id            String        @id @default(cuid())
+  githubHandle  String        @unique @map("github_handle")
+  email         String?       @unique
+  web3Identities Web3Identity[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Web3Identity {
+  id          String    @id @default(cuid())
+  type        String
+  chain       String
+  address     String
+  developerId String    @map("developer_id")
+  developer   Developer @relation(fields: [developerId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([chain, address])
+  @@index([developerId])
+}

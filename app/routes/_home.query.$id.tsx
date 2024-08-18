@@ -31,7 +31,6 @@ import CommunityOpenRank from "~/components/CommunityOpenRank";
 import axios from "axios";
 import { isAddress } from "viem";
 import { motion, AnimatePresence } from "framer-motion";
-import { projectsData } from "~/data/projects";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
 	const title = data ? `${data.query} - Web3Insights` : "Web3Insights";
@@ -173,9 +172,14 @@ export const loader = async (ctx: LoaderFunctionArgs) => {
 			communityOpenRankData = await fetchCommunityOpenRankData(query.keyword);
 		}
 
-		projectData = Object.entries(projectsData).find(
-			([key, data]) => data.name.toLowerCase() === query.keyword.toLowerCase(),
-		)?.[1];
+		projectData = await prisma.project.findFirst({
+			where: {
+				name: {
+					equals: query.keyword,
+					mode: "insensitive",
+				},
+			},
+		});
 	}
 
 	return json({
@@ -217,7 +221,13 @@ export default function QueryPage() {
 	const [isChartLoading, setIsChartLoading] = useState(true);
 
 	const parsedAnswer = useMemo(() => {
-		return JSON.parse((result as string) || `{"content": ""}`).content;
+		if (!result) return { content: "" };
+		try {
+			return JSON.parse(result);
+		} catch (error) {
+			console.error("Error parsing result:", error);
+			return { content: "" };
+		}
 	}, [result]);
 
 	const [, setSigninModalOpen] = useAtom(signinModalOpenAtom);
@@ -349,7 +359,7 @@ export default function QueryPage() {
 										transition={{ duration: 0.5 }}
 									>
 										<div className="text-sm sm:text-base text-gray-800 leading-relaxed">
-											<Markdown>{parsedAnswer}</Markdown>
+											<Markdown>{parsedAnswer.content}</Markdown>
 										</div>
 									</motion.div>
 								)}
@@ -387,7 +397,7 @@ export default function QueryPage() {
 										</thead>
 										<tbody className="relative">
 											<AnimatePresence>
-												{loaderData.projectData.core_contributors.map(
+												{loaderData.projectData.coreContributors?.map(
 													(contributor, index) => (
 														<motion.tr
 															key={contributor}
@@ -465,62 +475,60 @@ export default function QueryPage() {
 										</thead>
 										<tbody className="relative">
 											<AnimatePresence>
-												{loaderData.projectData.core_repos.map(
-													(repo, index) => (
-														<motion.tr
-															key={repo}
-															initial={{ opacity: 0, y: 10 }}
-															animate={{ opacity: 1, y: 0 }}
-															exit={{ opacity: 0, y: -10 }}
-															transition={{
-																duration: 0.3,
-																delay: index * 0.05,
-															}}
-															className="transition-colors duration-200 ease-in-out hover:bg-gray-50 border-b border-gray-100 last:border-b-0"
-														>
-															<td className="p-2 border-r border-gray-100">
-																<div className="font-medium text-center">
-																	{index + 1}
-																</div>
-															</td>
-															<td className="p-3 text-center">
-																<a
-																	href={`https://github.com/${repo}`}
-																	target="_blank"
-																	rel="noopener noreferrer"
-																	className="text-blue-600 hover:underline flex items-center justify-center"
+												{loaderData.projectData.coreRepos.map((repo, index) => (
+													<motion.tr
+														key={repo}
+														initial={{ opacity: 0, y: 10 }}
+														animate={{ opacity: 1, y: 0 }}
+														exit={{ opacity: 0, y: -10 }}
+														transition={{
+															duration: 0.3,
+															delay: index * 0.05,
+														}}
+														className="transition-colors duration-200 ease-in-out hover:bg-gray-50 border-b border-gray-100 last:border-b-0"
+													>
+														<td className="p-2 border-r border-gray-100">
+															<div className="font-medium text-center">
+																{index + 1}
+															</div>
+														</td>
+														<td className="p-3 text-center">
+															<a
+																href={`https://github.com/${repo}`}
+																target="_blank"
+																rel="noopener noreferrer"
+																className="text-blue-600 hover:underline flex items-center justify-center"
+															>
+																<span>{repo}</span>
+																<ExternalLink
+																	size={14}
+																	className="ml-1 text-gray-400"
+																/>
+															</a>
+														</td>
+														<td className="p-3 text-center">
+															<div className="flex justify-center space-x-2">
+																<Button
+																	isIconOnly
+																	size="sm"
+																	color="primary"
+																	aria-label="Analysis"
+																	className="text-white"
+																	title="Analysis"
+																	onClick={() => {
+																		const newQuery = `Analyze the GitHub repository ${repo}`;
+																		fetcher.submit(
+																			{ query: newQuery },
+																			{ method: "post", action: "/?index" },
+																		);
+																	}}
 																>
-																	<span>{repo}</span>
-																	<ExternalLink
-																		size={14}
-																		className="ml-1 text-gray-400"
-																	/>
-																</a>
-															</td>
-															<td className="p-3 text-center">
-																<div className="flex justify-center space-x-2">
-																	<Button
-																		isIconOnly
-																		size="sm"
-																		color="primary"
-																		aria-label="Analysis"
-																		className="text-white"
-																		title="Analysis"
-																		onClick={() => {
-																			const newQuery = `Analyze the GitHub repository ${repo}`;
-																			fetcher.submit(
-																				{ query: newQuery },
-																				{ method: "post", action: "/?index" },
-																			);
-																		}}
-																	>
-																		<Sparkles size={16} />
-																	</Button>
-																</div>
-															</td>
-														</motion.tr>
-													),
-												)}
+																	<Sparkles size={16} />
+																</Button>
+															</div>
+														</td>
+													</motion.tr>
+												))}
 											</AnimatePresence>
 										</tbody>
 									</table>
