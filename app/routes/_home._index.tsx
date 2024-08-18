@@ -188,7 +188,7 @@ export default function Index() {
 						<Image src={Logo} width={128} alt="Web3Insights Logo" />
 					</div>
 					<h1 className="text-2xl md:text-3xl font-bold">
-						An intelligent metric system for evaluating Web3 Ecosystems,
+						An Intelligent Metric System for Evaluating Web3 Ecosystems,
 						Communities and Repos.
 					</h1>
 				</div>
