@@ -22,6 +22,7 @@ export function NavToolbar(props: {
 	const location = useLocation();
 	const isHomePage = location.pathname === "/";
 	const isQueryPage = location.pathname.startsWith("/query/");
+	const isClaimRewardPage = location.pathname === "/claim-reward";
 
 	return (
 		<>
@@ -29,7 +30,7 @@ export function NavToolbar(props: {
 				<div className="flex items-center justify-between w-full px-4 py-2 sm:px-6 lg:px-8 max-w-[1200px] mx-auto">
 					<div className="flex items-center gap-4">
 						<UserButton />
-						{!isHomePage && (
+						{!isHomePage && !isClaimRewardPage && (
 							<Link
 								to="/"
 								className={`flex items-center gap-2 ${isQueryPage ? "absolute left-1/2 transform -translate-x-1/2" : ""}`}
@@ -81,7 +82,7 @@ export function NavToolbar(props: {
 				<div className="flex justify-between items-center w-full px-4 py-2 sm:px-6 lg:px-8 max-w-[1200px] mx-auto">
 					{isQueryPage ? (
 						<>
-							<div className="flex-1"></div>
+							<div className="flex-1" />
 							<Link
 								to="/"
 								className="flex items-center gap-2 absolute left-1/2 transform -translate-x-1/2"
@@ -114,7 +115,7 @@ export function NavToolbar(props: {
 								</SignInButton>
 							</div>
 						</>
-					) : (
+					) : !isHomePage && !isClaimRewardPage ? (
 						<>
 							<Link to="/" className="flex items-center gap-2">
 								<Image
@@ -145,6 +146,23 @@ export function NavToolbar(props: {
 								</SignInButton>
 							</div>
 						</>
+					) : (
+						<div className="flex items-center gap-2 justify-end w-full">
+							<SignInButton mode="modal">
+								<Button
+									size="sm"
+									variant="light"
+									startContent={<History size={18} />}
+								>
+									{isDesktop ? "History" : ""}
+								</Button>
+							</SignInButton>
+							<SignInButton mode="modal">
+								<Button size="sm" color="primary">
+									Login
+								</Button>
+							</SignInButton>
+						</div>
 					)}
 				</div>
 			</SignedOut>
