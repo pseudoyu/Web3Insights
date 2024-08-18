@@ -17,6 +17,7 @@ import {
 	Spinner,
 	Link,
 	Chip,
+	Tooltip,
 } from "@nextui-org/react";
 import { Sparkles, ExternalLink, BadgeCent } from "lucide-react";
 import { Footer } from "~/components/Footer";
@@ -213,12 +214,24 @@ export default function QueryPage() {
 	const params = useParams();
 
 	const result = useEventSource(`/completion/${params.id}`);
-	const fetcher = useFetcher<{ error: string; type: ErrorType }>();
-	const errorMessage = fetcher.data?.error;
-	const errorType = fetcher.data?.type;
+	const askFetcher = useFetcher<{ error: string; type: ErrorType }>();
+	const askErrorMessage = askFetcher.data?.error;
+	const askErrorType = askFetcher.data?.type;
 
-	const asking = fetcher.state === "submitting";
+	const analyzeFetcher = useFetcher<{ error: string; type: ErrorType }>();
+	const analyzeErrorMessage = analyzeFetcher.data?.error;
+	const analyzeErrorType = analyzeFetcher.data?.type;
+
+	const rewardFetcher = useFetcher<{ error: string; type: ErrorType }>();
+	const rewardErrorMessage = rewardFetcher.data?.error;
+	const rewardErrorType = rewardFetcher.data?.type;
+
+	const asking = askFetcher.state === "submitting";
+	const analyzing = analyzeFetcher.state === "submitting";
+	const sending = rewardFetcher.state === "submitting";
+
 	const [isChartLoading, setIsChartLoading] = useState(true);
+	const [analyzingRepo, setAnalyzingRepo] = useState<string | null>(null);
 
 	const parsedAnswer = useMemo(() => {
 		if (!result) return { content: "" };
@@ -234,13 +247,13 @@ export default function QueryPage() {
 
 	useEffect(() => {
 		if (
-			fetcher.state === "idle" &&
-			errorMessage &&
-			errorType === ErrorType.SigninNeeded
+			askFetcher.state === "idle" &&
+			askErrorMessage &&
+			askErrorType === ErrorType.SigninNeeded
 		) {
 			setSigninModalOpen(true);
 		}
-	}, [fetcher.state, errorMessage, errorType, setSigninModalOpen]);
+	}, [askFetcher.state, askErrorMessage, askErrorType, setSigninModalOpen]);
 
 	useEffect(() => {
 		if (
@@ -434,10 +447,46 @@ export default function QueryPage() {
 																	<Button
 																		isIconOnly
 																		size="sm"
+																		color="primary"
+																		isDisabled
+																		aria-label="Analysis"
+																		className="text-white"
+																		title="Analysis"
+																	>
+																		<Sparkles size={16} />
+																	</Button>
+																	<Button
+																		isIconOnly
+																		size="sm"
 																		color="secondary"
 																		aria-label="Reward"
-																		isDisabled
-																		title="Reward (Soon)"
+																		title="Reward"
+																		isLoading={
+																			sending &&
+																			rewardFetcher.formAction ===
+																				`/reward/${contributor}`
+																		}
+																		isDisabled={
+																			sending &&
+																			rewardFetcher.formAction !==
+																				`/reward/${contributor}`
+																		}
+																		onClick={() => {
+																			if (loaderData.projectData) {
+																				const projectName =
+																					loaderData.projectData.name;
+																				rewardFetcher.submit(
+																					{ projectName },
+																					{
+																						method: "POST",
+																						action: `/reward/${contributor}`,
+																					},
+																				);
+																			} else {
+																				console.error("Project data is null");
+																				// You might want to show an error message to the user here
+																			}
+																		}}
 																		className="text-white"
 																	>
 																		<BadgeCent size={16} />
@@ -515,9 +564,16 @@ export default function QueryPage() {
 																	aria-label="Analysis"
 																	className="text-white"
 																	title="Analysis"
+																	isLoading={
+																		analyzing && analyzingRepo === repo
+																	}
+																	isDisabled={
+																		analyzing && analyzingRepo !== repo
+																	}
 																	onClick={() => {
+																		setAnalyzingRepo(repo);
 																		const newQuery = `Analyze the GitHub repository ${repo}`;
-																		fetcher.submit(
+																		analyzeFetcher.submit(
 																			{ query: newQuery },
 																			{ method: "post", action: "/?index" },
 																		);
@@ -636,7 +692,7 @@ export default function QueryPage() {
 					transition={{ duration: 0.5, delay: 1.4 }}
 					className="mt-8 sm:mt-12"
 				>
-					<fetcher.Form method="POST" action="/?index">
+					<askFetcher.Form method="POST" action="/?index">
 						<div className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
 							<Input
 								placeholder="Evaluate a new one..."
@@ -645,8 +701,8 @@ export default function QueryPage() {
 								name="query"
 								type="text"
 								className="flex-grow"
-								isInvalid={!!errorMessage}
-								errorMessage={errorMessage}
+								isInvalid={!!askErrorMessage}
+								errorMessage={askErrorMessage}
 							/>
 							<Button
 								isLoading={asking}
@@ -658,7 +714,7 @@ export default function QueryPage() {
 								Ask
 							</Button>
 						</div>
-					</fetcher.Form>
+					</askFetcher.Form>
 				</motion.div>
 			</div>
 
