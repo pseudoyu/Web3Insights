@@ -146,7 +146,7 @@ async function getGitHubUserInfo(user: string) {
 
 export async function analyzeInfo(
 	info: any,
-	type: "evm" | "github_user" | "github_repo",
+	type: "evm" | "github_repo" | undefined,
 ) {
 	const model = openai("gpt-4o");
 	let prompt;
@@ -156,12 +156,12 @@ export async function analyzeInfo(
 			prompt = `Analyze the following EVM address information and provide a concise summary:
 				${JSON.stringify(info)}`;
 			break;
-		case "github_user":
-			prompt = `Analyze the following GitHub user information and provide a concise summary:
-				${JSON.stringify(info)}`;
-			break;
 		case "github_repo":
 			prompt = `Analyze the following GitHub repository information and provide a concise summary:
+				${JSON.stringify(info)}`;
+			break;
+		default:
+			prompt = `Analyze the following information and provide a concise summary:
 				${JSON.stringify(info)}`;
 			break;
 	}

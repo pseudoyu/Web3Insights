@@ -51,13 +51,13 @@ export async function loader(ctx: LoaderFunctionArgs) {
 		});
 	}
 
-	let type: "evm" | "github_repo" | "other";
+	let type: "evm" | "github_repo" | undefined;
 	if (isAddress(searchKeyword) || searchKeyword.endsWith(".eth")) {
 		type = "evm";
 	} else if (searchKeyword.includes("/")) {
 		type = "github_repo";
 	} else {
-		type = "other";
+		type = undefined;
 	}
 
 	const analysis = await analyzeInfo(info, type);
