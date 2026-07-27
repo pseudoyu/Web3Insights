@@ -46,7 +46,7 @@ catalog:
 
   # AI
   ai: 6.0.184
-  '@ai-sdk/openai': 3.0.64
+  '@ai-sdk/openai': 4.0.20
   '@ai-sdk/react': 3.0.186
 
   # Backend (Hono on Vercel — the only API runtime after the L5 NestJS purge)
