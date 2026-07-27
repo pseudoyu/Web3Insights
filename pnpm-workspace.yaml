@@ -74,9 +74,9 @@ catalog:
 
   # Husky / git
   husky: 9.1.7
-  'lint-staged': 17.1.0
+  'lint-staged': 17.2.0
   syncpack: 15.3.2
-  turbo: 2.10.5
+  turbo: 2.10.7
 
   # Misc utilities used in multiple apps
   'date-fns': 4.4.0
