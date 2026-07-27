@@ -29,7 +29,7 @@
     "ai": "catalog:",
     "drizzle-orm": "catalog:",
     "exceljs": "^4.4.0",
-    "hono": "4.12.31",
+    "hono": "4.12.32",
     "inngest": "4.4.0",
     "jose": "^6.2.4",
     "pg": "catalog:",
