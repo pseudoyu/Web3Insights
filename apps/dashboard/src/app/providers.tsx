@@ -36,8 +36,8 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
                 <ChartThemeBinder />
                 <NavigationProgress />
                 <ToastContainer />
-                {children}
               </ClientOnly>
+              {children}
             </ThemeProvider>
           </PrivyProvider>
         </JotaiProvider>

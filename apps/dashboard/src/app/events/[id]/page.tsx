@@ -41,6 +41,7 @@ export async function generateMetadata({
     return {
       title: "Event Details",
       description: "Explore Web3 event analytics and insights.",
+      robots: { index: false, follow: false },
     };
   }
 
@@ -49,19 +50,31 @@ export async function generateMetadata({
 
     if (result.success && result.data) {
       const eventName = result.data.description || `Event ${eventId}`;
+      const title = `${eventName} Web3 Event Analytics`;
+      const description = `Explore contributor activity, ecosystem performance, and public analytics for ${eventName}.`;
+      const url = `/events/${encodeURIComponent(resolvedParams.id)}`;
 
       return {
-        title: eventName,
-        description: `Analytics and insights for ${eventName}.`,
+        title,
+        description,
+        alternates: { canonical: url },
+        openGraph: { title, description, url, type: "website" },
+        robots: { index: true, follow: true },
       };
     }
   } catch (error) {
     console.error("[Events] generateMetadata error:", error);
+    return {
+      title: "Event Details",
+      description: "Explore Web3 event analytics and insights.",
+      robots: { index: false, follow: false },
+    };
   }
 
   return {
     title: "Event Details",
     description: "Explore Web3 event analytics and insights.",
+    robots: { index: false, follow: false },
   };
 }
 

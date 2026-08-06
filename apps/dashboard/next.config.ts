@@ -8,6 +8,16 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true, // Temporarily ignore for migration validation
   },
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "dash.dev.web3insight.ai" }],
+        destination: "https://dash.web3insight.ai/:path*",
+        statusCode: 301,
+      },
+    ];
+  },
   // Note: eslint config is no longer supported in next.config.ts in Next.js 16
   // Use eslint command directly or configure in .eslintrc.cjs
 

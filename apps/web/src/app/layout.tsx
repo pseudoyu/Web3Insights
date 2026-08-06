@@ -7,6 +7,12 @@ import { QueryProvider } from "@/lib/query/provider"
 import { env } from "@/env"
 import "./globals.css"
 
+const siteUrl = "https://web3insight.ai"
+const siteName = "Web3Insight"
+const siteTitle = "Web3Insight | AI-Powered Web3 Developer Analytics Platform"
+const siteDescription =
+  "Discover Web3 developers, analyze ecosystem activity, and track growth with AI-powered insights from GitHub data and on-chain activity."
+
 const display = Bricolage_Grotesque({
   subsets: ["latin"],
   variable: "--font-display",
@@ -36,9 +42,40 @@ const label = Caveat({
 })
 
 export const metadata: Metadata = {
-  title: "Web3Insight — Discover, Analyze & Connect with Web3 Developers",
-  description:
-    "AI-powered developer insights for Web3 ecosystems. Identify developers, track events, and power ecosystem growth with GitHub data and on-chain activity.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: siteTitle,
+    template: `%s | ${siteName}`,
+  },
+  description: siteDescription,
+  applicationName: siteName,
+  manifest: "/site.webmanifest",
+  alternates: { canonical: "/" },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  openGraph: {
+    type: "website",
+    siteName,
+    url: siteUrl,
+    title: siteTitle,
+    description: siteDescription,
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: siteTitle }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
+    images: [{ url: "/opengraph-image", alt: siteTitle }],
+  },
   icons: {
     icon: [
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
@@ -58,9 +95,37 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${siteUrl}/#organization`,
+        name: siteName,
+        url: siteUrl,
+        logo: `${siteUrl}/logo.png`,
+        description: siteDescription,
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${siteUrl}/#website`,
+        name: siteName,
+        url: siteUrl,
+        description: siteDescription,
+        publisher: { "@id": `${siteUrl}/#organization` },
+      },
+    ],
+  }
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+          }}
+        />
         <script
           defer
           src="https://umami.web3insight.ai/script.js"

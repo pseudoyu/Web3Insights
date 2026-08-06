@@ -55,13 +55,11 @@ function EcosystemTypeFilter({
               {EcosystemTypeLabels[selectedType]}
             </Button>
           </DropdownTrigger>
-          <DropdownMenu
-            selectedKeys={[selectedType]}
-            selectionMode="single"
-            onAction={(key) => onTypeChange(key as EcosystemType)}
-          >
+          <DropdownMenu>
             {options.map(({ key, label }) => (
-              <DropdownItem key={key}>{label}</DropdownItem>
+              <DropdownItem key={key} onClick={() => onTypeChange(key)}>
+                {label}
+              </DropdownItem>
             ))}
           </DropdownMenu>
         </Dropdown>

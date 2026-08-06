@@ -21,6 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
         return {
           title: `${githubHandle} DevInsight | ${title}`,
           description: `AI-powered DevInsight analysis of ${githubHandle}'s Web3 development profile`,
+          robots: { index: false, follow: false },
         };
       }
     }
@@ -33,6 +34,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: "DevInsight",
     description:
       "AI-powered DevInsight analysis of your Web3 development profile",
+    robots: { index: false, follow: false },
   };
 }
 

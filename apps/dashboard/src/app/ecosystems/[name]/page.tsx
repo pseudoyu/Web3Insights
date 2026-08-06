@@ -13,13 +13,49 @@ interface EcosystemPageProps {
 export async function generateMetadata({
   params,
 }: EcosystemPageProps): Promise<Metadata> {
-  const resolvedParams = await params;
-  const ecosystemName = decodeURIComponent(resolvedParams.name);
+  try {
+    const { name } = await params;
+    const ecosystemName = decodeURIComponent(name);
+    const result = await api.ecosystems.getRankList();
 
-  return {
-    title: `${ecosystemName} Ecosystem`,
-    description: `Detailed metrics and analytics for the ${ecosystemName} ecosystem. Track developer activity, contributions, and growth.`,
-  };
+    if (!result.success) {
+      return {
+        title: "Ecosystem Analytics",
+        description: "Web3 ecosystem developer and repository analytics.",
+        robots: { index: false, follow: false },
+      };
+    }
+
+    const ecosystem = result.data?.list.find(
+      (item) => item.eco_name === ecosystemName,
+    );
+
+    if (!ecosystem) {
+      return {
+        title: "Ecosystem Analytics",
+        description: "Web3 ecosystem developer and repository analytics.",
+        robots: { index: false, follow: false },
+      };
+    }
+
+    const title = `${ecosystemName} Ecosystem Analytics`;
+    const description = `Explore developer activity, repository growth, contributions, and participation across the ${ecosystemName} Web3 ecosystem.`;
+    const url = `/ecosystems/${encodeURIComponent(ecosystemName)}`;
+
+    return {
+      title,
+      description,
+      alternates: { canonical: url },
+      openGraph: { title, description, url, type: "website" },
+      robots: { index: true, follow: true },
+    };
+  } catch (_error) {
+    return {
+      title: "Ecosystem Analytics",
+      description: "Web3 ecosystem developer and repository analytics.",
+      robots: { index: false, follow: false },
+    };
+  }
 }
 
 export default async function EcosystemDetailPage({

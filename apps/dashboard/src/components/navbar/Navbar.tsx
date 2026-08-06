@@ -3,7 +3,6 @@
 import clsx from "clsx";
 import Link from "next/link";
 import Image from "next/image";
-import { useMediaQuery } from "react-responsive";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
@@ -16,7 +15,6 @@ import useSessionActions from "./useSessionActions";
 import PrefersColorSchemeSelector from "./PrefersColorSchemeSelector";
 
 function Navbar({ className, children, user, extra }: NavbarProps) {
-  const isDesktop = useMediaQuery({ minWidth: 1024 });
   const { theme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -54,18 +52,14 @@ function Navbar({ className, children, user, extra }: NavbarProps) {
                     ? "/web3insight_logo_white.svg"
                     : "/web3insight_logo.svg"
                 }
-                width={isDesktop ? 140 : 112}
-                height={isDesktop ? 24 : 20}
+                width={140}
+                height={24}
                 alt={`${getTitle()} Logo`}
+                className="h-5 w-[112px] shrink-0 lg:h-6 lg:w-[140px]"
                 priority
               />
             ) : (
-              <div
-                style={{
-                  width: isDesktop ? 140 : 112,
-                  height: isDesktop ? 24 : 20,
-                }}
-              />
+              <div className="h-5 w-[112px] shrink-0 lg:h-6 lg:w-[140px]" />
             )}
           </Link>
           <span className="hidden font-mono text-[10px] uppercase tracking-[0.22em] text-fg-muted sm:inline">

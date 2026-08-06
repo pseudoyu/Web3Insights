@@ -1,4 +1,3 @@
-import { getMetadata } from "@/utils/app";
 import { api } from "@/lib/api/client";
 import { getUser } from "~/auth/repository";
 import EcosystemRankViewWidget from "~/ecosystem/views/ecosystem-rank";
@@ -12,16 +11,21 @@ import DefaultLayoutWrapper from "./DefaultLayoutWrapper";
 import HomePageClient from "./HomePageClient";
 import CountryDistributionChart from "$/CountryDistributionChart";
 
-const { title, tagline, description } = getMetadata();
+const description =
+  "Explore transparent Web3 ecosystem, repository, developer, and event analytics built from public contribution, activity, and growth signals.";
 
 export const metadata = {
   title: {
-    absolute: `${title} - ${tagline}`,
+    absolute: "Web3 Developer & Ecosystem Analytics | Web3Insight",
   },
   openGraph: {
-    title: `${title} - ${tagline}`,
+    title: "Web3 Developer & Ecosystem Analytics | Web3Insight",
+    description,
+    url: "/",
+    type: "website",
   },
   description,
+  alternates: { canonical: "/" },
 };
 
 export default async function HomePage() {
@@ -82,7 +86,7 @@ export default async function HomePage() {
             On-chain developer activity · live
           </SmallCapsLabel>
           <h1 className="font-display text-[clamp(2.25rem,5vw,3.5rem)] leading-[1.02] font-semibold tracking-[-0.02em] text-fg max-w-[18ch]">
-            The developer layer,
+            Web3 developer analytics,
             <br />
             measured in public.
           </h1>

@@ -1,17 +1,15 @@
 "use client";
 
 import { Menu as BaseMenu } from "@base-ui/react/menu";
-import { type ReactNode } from "react";
+import { type ReactElement, type ReactNode } from "react";
 import clsx from "clsx";
 
 function Dropdown({ children }: { children: ReactNode }) {
   return <BaseMenu.Root>{children}</BaseMenu.Root>;
 }
 
-function DropdownTrigger({ children }: { children: ReactNode }) {
-  return (
-    <BaseMenu.Trigger className="inline-flex">{children}</BaseMenu.Trigger>
-  );
+function DropdownTrigger({ children }: { children: ReactElement }) {
+  return <BaseMenu.Trigger render={children} />;
 }
 
 interface DropdownMenuProps {

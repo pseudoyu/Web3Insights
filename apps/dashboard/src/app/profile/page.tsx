@@ -6,8 +6,9 @@ import { fetchCurrentUser } from "~/auth/repository";
 import DefaultLayoutWrapper from "../DefaultLayoutWrapper";
 
 export const metadata: Metadata = {
-  title: `My Profile | ${getTitle()}`,
+  title: "My Profile",
   description: `Manage your ${getTitle()} profile`,
+  robots: { index: false, follow: false },
 };
 
 export default async function ProfilePage() {

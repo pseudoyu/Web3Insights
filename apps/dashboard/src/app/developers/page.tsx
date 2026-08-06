@@ -10,9 +10,17 @@ import DefaultLayoutWrapper from "../DefaultLayoutWrapper";
 import DevelopersPageClient from "./DevelopersPageClient";
 
 export const metadata: Metadata = {
-  title: "All Developers",
+  title: "Web3 Developer Contribution Analytics",
   description:
-    "Top contributors and developers across Web3 ecosystems with activity metrics and contributions",
+    "Discover leading Web3 developers and compare contribution activity, ecosystem participation, and open-source impact across communities.",
+  alternates: { canonical: "/developers" },
+  openGraph: {
+    title: "Web3 Developer Contribution Analytics | Web3Insight",
+    description:
+      "Discover leading Web3 developers and compare contribution activity, ecosystem participation, and open-source impact across communities.",
+    url: "/developers",
+    type: "website",
+  },
 };
 
 export default async function DevelopersPage() {

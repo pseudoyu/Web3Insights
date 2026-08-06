@@ -137,6 +137,9 @@ export function HeroSection() {
                 {t("hero.title2")}
               </OutlinedDisplay>
             </span>
+            <span className="sr-only">
+              {" "}— AI-powered Web3 developer analytics
+            </span>
           </h1>
 
           <p className="mt-8 max-w-[58ch] text-base leading-[1.65] text-muted-foreground sm:text-lg">

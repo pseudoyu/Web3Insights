@@ -6,9 +6,17 @@ import YearlyReport from "~/report/views/yearly-report";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "2025 Annual Report",
+  title: "2025 Web3 Developer Ecosystem Report",
   description:
-    "Chinese Web3 developer ecosystem annual report - developer growth, ecosystem participation, and top repositories.",
+    "Read the 2025 Web3 developer ecosystem report covering contributor growth, ecosystem participation, activity trends, and leading repositories.",
+  alternates: { canonical: "/report" },
+  openGraph: {
+    title: "2025 Web3 Developer Ecosystem Report",
+    description:
+      "Read the 2025 Web3 developer ecosystem report covering contributor growth, ecosystem participation, activity trends, and leading repositories.",
+    url: "/report",
+    type: "website",
+  },
 };
 
 export default async function ReportPage() {

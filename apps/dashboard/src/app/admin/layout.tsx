@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { canManageEcosystems, canManageEvents } from "~/auth/helper";
@@ -9,6 +10,10 @@ import AdminHeader from "./AdminHeader";
 interface AdminLayoutProps {
   children: React.ReactNode;
 }
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 async function getAdminUser() {
   const user = await getUser();

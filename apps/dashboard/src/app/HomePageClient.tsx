@@ -140,14 +140,14 @@ export default function HomePageClient() {
             </SmallCapsLabel>
           </div>
 
-          <h1 className="font-display font-extrabold leading-[0.92] text-[44px] sm:text-[64px] lg:text-[88px] text-fg">
+          <div className="font-display font-extrabold leading-[0.92] text-[44px] sm:text-[64px] lg:text-[88px] text-fg">
             <span className="block">Web3</span>
             <span className="mt-1 block">
               <OutlinedDisplay stack={4} offset={4} solidFront>
                 insight
               </OutlinedDisplay>
             </span>
-          </h1>
+          </div>
 
           <p className="mt-8 max-w-[58ch] text-base leading-[1.65] text-fg-muted sm:text-lg">
             Discover, analyze, and connect with Web3 developers. Powered by

@@ -10,9 +10,17 @@ import DefaultLayoutWrapper from "../DefaultLayoutWrapper";
 import EcosystemsPageClient from "./EcosystemsPageClient";
 
 export const metadata: Metadata = {
-  title: "All Ecosystems",
+  title: "Web3 Ecosystem Developer Analytics",
   description:
-    "Comprehensive overview of all blockchain and Web3 ecosystems with analytics and insights",
+    "Compare Web3 ecosystems by developer activity, repository growth, contributor participation, and other transparent open-source signals.",
+  alternates: { canonical: "/ecosystems" },
+  openGraph: {
+    title: "Web3 Ecosystem Developer Analytics | Web3Insight",
+    description:
+      "Compare Web3 ecosystems by developer activity, repository growth, contributor participation, and other transparent open-source signals.",
+    url: "/ecosystems",
+    type: "website",
+  },
 };
 
 export default async function EcosystemsPage() {

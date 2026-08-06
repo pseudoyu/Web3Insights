@@ -140,7 +140,7 @@ export default function Home() {
         <motion.div className="text-center mb-10 md:mb-14" variants={itemVariants}>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
             <span className="bg-gradient-to-r from-violet-400 via-white to-emerald-400 bg-clip-text text-transparent">
-              Dev Card
+              Web3 Developer Identity Cards
             </span>
           </h1>
           <p className="text-gray-400 text-base md:text-lg max-w-md mx-auto">

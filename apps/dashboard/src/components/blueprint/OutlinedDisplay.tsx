@@ -33,27 +33,27 @@ export function OutlinedDisplay({
           return (
             <span
               key={i}
-              className="absolute inset-x-0 block"
+              aria-hidden
+              data-text={children}
+              className="absolute inset-x-0 block before:block before:content-[attr(data-text)]"
               style={{
                 top: `${top}px`,
                 color: "transparent",
                 WebkitTextStroke: "1px var(--fg)",
               }}
-            >
-              {children}
-            </span>
+            />
           );
         })}
         <span
-          className="relative block"
+          aria-hidden
+          data-text={children}
+          className="relative block before:block before:content-[attr(data-text)]"
           style={{
             top: `${stack * offset}px`,
             color: solidFront ? "var(--fg)" : "transparent",
             WebkitTextStroke: solidFront ? undefined : "1px var(--fg)",
           }}
-        >
-          {children}
-        </span>
+        />
       </span>
     </Comp>
   );

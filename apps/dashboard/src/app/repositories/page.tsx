@@ -10,9 +10,17 @@ import DefaultLayoutWrapper from "../DefaultLayoutWrapper";
 import RepositoriesPageClient from "./RepositoriesPageClient";
 
 export const metadata: Metadata = {
-  title: "All Repositories",
+  title: "Web3 Open-Source Repository Analytics",
   description:
-    "Top repositories by developer engagement and contributions across Web3 ecosystems",
+    "Explore Web3 repositories ranked by developer engagement, contributor activity, growth, and sustained open-source participation.",
+  alternates: { canonical: "/repositories" },
+  openGraph: {
+    title: "Web3 Open-Source Repository Analytics | Web3Insight",
+    description:
+      "Explore Web3 repositories ranked by developer engagement, contributor activity, growth, and sustained open-source participation.",
+    url: "/repositories",
+    type: "website",
+  },
 };
 
 export default async function RepositoriesPage() {

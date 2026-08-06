@@ -36,17 +36,25 @@ export async function generateMetadata({
 
   const analysis = await fetchSharedAnalysis(id);
 
-  if (analysis?.github?.users?.[0]) {
+  if (analysis?.public && analysis.github?.users?.[0]) {
     const handle = analysis.github.users[0].login;
+    const title = `${handle} Public DevInsight Analysis`;
+    const description = `Explore the public Web3 developer profile and contribution analysis for GitHub user ${handle}.`;
+    const url = `/devinsight/${encodeURIComponent(id)}`;
+
     return {
-      title: `${handle} DevInsight`,
-      description: `Public DevInsight analysis for GitHub user ${handle}.`,
+      title,
+      description,
+      alternates: { canonical: url },
+      openGraph: { title, description, url, type: "website" },
+      robots: { index: true, follow: true },
     };
   }
 
   return {
     title: `DevInsight ${id}`,
     description: `Shared DevInsight analysis on ${baseTitle}.`,
+    robots: { index: false, follow: false },
   };
 }
 

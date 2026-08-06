@@ -17,37 +17,58 @@ interface RepositoryPageProps {
 
 export async function generateMetadata({
   params,
-  searchParams,
 }: RepositoryPageProps): Promise<Metadata> {
   const resolvedParams = await params;
-  const resolvedSearchParams = await searchParams;
   const repoId = resolvedParams.id;
-  let repoName = "Unknown";
+  const repoNumericId = Number.parseInt(repoId, 10);
+
+  if (!/^\d+$/.test(repoId) || Number.isNaN(repoNumericId)) {
+    return {
+      title: "Repository Details",
+      description: "Web3 repository analytics and metrics",
+      robots: { index: false, follow: false },
+    };
+  }
 
   try {
-    if (resolvedSearchParams.name) {
-      repoName = resolvedSearchParams.name;
-    } else {
-      // Try to fetch from rank list to get the name
-      const rankListRes = await api.repos.getRankList();
-      if (rankListRes.success && rankListRes.data) {
-        const repoRankData = rankListRes.data.list.find(
-          (repo) => repo.repo_id === parseInt(repoId),
-        );
-        if (repoRankData) {
-          repoName = repoRankData.repo_name;
-        }
-      }
+    const rankListRes = await api.repos.getRankList();
+
+    if (!rankListRes.success) {
+      return {
+        title: "Repository Details",
+        description: "Web3 repository analytics and metrics",
+        robots: { index: false, follow: false },
+      };
     }
 
+    const repo = rankListRes.data?.list.find(
+      (item) => item.repo_id === repoNumericId,
+    );
+
+    if (!repo) {
+      return {
+        title: "Repository Details",
+        description: "Web3 repository analytics and metrics",
+        robots: { index: false, follow: false },
+      };
+    }
+
+    const title = `${repo.repo_name} Repository Analytics`;
+    const description = `Explore developer activity, contributors, growth, and community engagement for the ${repo.repo_name} Web3 repository.`;
+    const url = `/repositories/${encodeURIComponent(repoId)}`;
+
     return {
-      title: `${repoName} - Repository Details`,
-      description: `Repository analytics and metrics for ${repoName}. Track development activity, contributors, and community engagement.`,
+      title,
+      description,
+      alternates: { canonical: url },
+      openGraph: { title, description, url, type: "website" },
+      robots: { index: true, follow: true },
     };
   } catch (_error) {
     return {
       title: "Repository Details",
       description: "Web3 repository analytics and metrics",
+      robots: { index: false, follow: false },
     };
   }
 }

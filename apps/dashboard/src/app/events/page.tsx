@@ -5,9 +5,17 @@ import { getUser } from "~/auth/repository";
 import DefaultLayoutWrapper from "../DefaultLayoutWrapper";
 
 export const metadata: Metadata = {
-  title: "All Events",
+  title: "Web3 Hackathon & Developer Event Analytics",
   description:
-    "Comprehensive overview of Web3 development events and hackathons with insights and analytics",
+    "Explore public analytics for Web3 hackathons and developer events, including contributor activity, ecosystem performance, and participation.",
+  alternates: { canonical: "/events" },
+  openGraph: {
+    title: "Web3 Hackathon & Developer Event Analytics | Web3Insight",
+    description:
+      "Explore public analytics for Web3 hackathons and developer events, including contributor activity, ecosystem performance, and participation.",
+    url: "/events",
+    type: "website",
+  },
 };
 
 export default async function EventsPage() {

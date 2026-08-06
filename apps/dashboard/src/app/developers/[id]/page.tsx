@@ -20,21 +20,31 @@ export async function generateMetadata({
 
     if (res.success && res.data) {
       const developerHandle = `@${res.data.username}`;
+      const title = `${developerHandle} Web3 Developer Profile`;
+      const description = `Explore contribution activity, repositories, and ecosystem participation for Web3 developer ${developerHandle}.`;
+      const url = `/developers/${encodeURIComponent(resolvedParams.id)}`;
 
       return {
-        title: `${developerHandle} - Developer Profile`,
-        description: `Developer profile and contribution analytics for ${developerHandle}. Track ecosystem contributions and activity.`,
+        title,
+        description,
+        alternates: { canonical: url },
+        openGraph: { title, description, url, type: "website" },
+        robots: { index: true, follow: true },
       };
     }
 
-    return {
+    const fallback: Metadata = {
       title: "Developer Profile",
       description: "Web3 developer profile and analytics",
+      robots: { index: false, follow: false },
     };
+
+    return fallback;
   } catch (_error) {
     return {
       title: "Developer Profile",
       description: "Web3 developer profile and analytics",
+      robots: { index: false, follow: false },
     };
   }
 }

@@ -44,7 +44,23 @@ export async function generateMetadata({
 }: DonationPageProps): Promise<Metadata> {
   const { id } = await params;
 
+  if (!id || Number.isNaN(Number(id))) {
+    return {
+      title: "x402 Donation Project",
+      description: "Open-source Web3 project donation details.",
+      robots: { index: false, follow: false },
+    };
+  }
+
   const donateRepo = await fetchDonateRepo(id);
+  if (!donateRepo) {
+    return {
+      title: "x402 Donation Project",
+      description: "Open-source Web3 project donation details.",
+      robots: { index: false, follow: false },
+    };
+  }
+
   const repoName = donateRepo?.repo_info?.full_name || "Unknown";
   const title = donateRepo?.repo_donate_data?.title || repoName;
   const description =
@@ -52,13 +68,20 @@ export async function generateMetadata({
     donateRepo?.repo_info?.description ||
     `Support ${repoName} with crypto donations`;
 
+  const metadataTitle = `${title} - Donate - ${getTitle()}`;
+  const url = `/plaza/x402/${encodeURIComponent(id)}`;
+
   return {
-    title: `${title} - Donate - ${getTitle()}`,
+    title: metadataTitle,
     description,
+    alternates: { canonical: url },
     openGraph: {
-      title: `Support ${title}`,
+      title: metadataTitle,
       description,
+      url,
+      type: "website",
     },
+    robots: { index: true, follow: true },
   };
 }
 

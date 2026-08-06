@@ -8,9 +8,10 @@ import { env } from "@/env"
  * Used inside dev-card's Next.js oRPC procedures (src/orpc/router.ts) to call
  * the backend's typed contracts directly instead of hitting REST URLs.
  *
- * If `explicitToken` is supplied, it overrides the cookie lookup. This is
- * needed inside `signInWithPrivy` where the new auth-token is in the response
- * body but hasn't been written back to the cookie store yet.
+ * If `explicitToken` is supplied, it overrides the cookie lookup. Pass `null`
+ * for public requests that should not read or forward authentication state.
+ * This is needed inside `signInWithPrivy` where the new auth-token is in the
+ * response body but hasn't been written back to the cookie store yet.
  */
 export function createBackendClient(explicitToken?: string | null) {
   return createWeb3InsightClient({
@@ -18,12 +19,12 @@ export function createBackendClient(explicitToken?: string | null) {
     // Reason: dev-card is a server-to-server consumer of the backend RPC.
     // Don't forward browser cookies; we attach the JWT ourselves.
     credentials: "omit",
-    token: explicitToken
-      ? explicitToken
-      : async () => {
+    token: explicitToken === undefined
+      ? async () => {
           const store = await cookies()
           return store.get("auth-token")?.value
-        },
+        }
+      : explicitToken ?? undefined,
   })
 }
 
