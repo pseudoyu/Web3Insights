@@ -151,12 +151,12 @@ function WebPageContent({ userId }: { userId: string }) {
           {/* White card background - overlaps bottom 40px of avatar */}
           <div className="bg-white rounded-[16px] md:rounded-[24px] w-full mt-[-56px] pt-[56px] px-5 md:px-[50px] pb-6 md:pb-8">
             {/* Name */}
-            <h1
+            <h2
               className="text-[28px] font-bold text-[#1a1a1a] text-center leading-[20px]"
               style={{ fontFamily: "'DM Sans', sans-serif" }}
             >
               {name}
-            </h1>
+            </h2>
 
             {/* Bio */}
             {bio && (

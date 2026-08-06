@@ -83,7 +83,7 @@ export async function createCardMetadata(ecosystem: Ecosystem, label: string, us
   }
 }
 
-export async function CardStructuredData({ ecosystem, label, userId }: { ecosystem: Ecosystem; label: string; userId: string }) {
+export async function CardSeoContent({ ecosystem, label, userId }: { ecosystem: Ecosystem; label: string; userId: string }) {
   const user = await getPublicCardUser(ecosystem, userId)
   if (!user) return null
 
@@ -104,5 +104,10 @@ export async function CardStructuredData({ ecosystem, label, userId }: { ecosyst
     },
   }
 
-  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }} />
+  return (
+    <>
+      <h1 className="sr-only">{name}&apos;s {label} Dev Card</h1>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }} />
+    </>
+  )
 }
