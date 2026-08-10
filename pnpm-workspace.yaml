@@ -17,12 +17,12 @@ catalog:
   react-hook-form: 7.76.0
 
   # oRPC (api-contract + clients + server adapters)
-  '@orpc/contract': 1.14.8
-  '@orpc/server': 1.14.8
-  '@orpc/client': 1.14.8
-  '@orpc/zod': 1.14.8
-  '@orpc/tanstack-query': 1.14.8
-  '@orpc/openapi': 1.14.8
+  '@orpc/contract': 1.14.15
+  '@orpc/server': 1.14.15
+  '@orpc/client': 1.14.15
+  '@orpc/zod': 1.14.15
+  '@orpc/tanstack-query': 1.14.15
+  '@orpc/openapi': 1.14.15
 
   # Frontend runtime
   next: 16.2.10
