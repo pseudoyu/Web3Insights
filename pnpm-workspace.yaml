@@ -32,8 +32,8 @@ catalog:
   '@tanstack/react-query-devtools': 5.101.2
 
   # UI
-  tailwindcss: 4.3.2
-  '@tailwindcss/postcss': 4.3.2
+  tailwindcss: 4.3.3
+  '@tailwindcss/postcss': 4.3.3
   'tailwind-merge': 3.6.0
   clsx: 2.1.1
   'class-variance-authority': 0.7.1
