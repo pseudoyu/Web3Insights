@@ -20,8 +20,7 @@ export const syncDbActorsApi = inngest.createFunction(
   },
   async ({ event, step }) => {
     const data = event.data as
-      | { startActorId?: number; batchSize?: number }
-      | undefined;
+      { startActorId?: number; batchSize?: number } | undefined;
     const batchSize = data?.batchSize ?? 500;
     await step.run('init-batch', () => {
       void getContainer(env);

@@ -57,7 +57,7 @@
     "framer-motion": "catalog:",
     "highcharts": "^12.6.0",
     "highcharts-react-official": "^3.2.3",
-    "jose": "^6.2.4",
+    "jose": "^6.2.8",
     "jotai": "^2.20.0",
     "lucide-react": "catalog:",
     "mcp-handler": "1.1.0",
@@ -96,7 +96,7 @@
     "dotenv": "^17.4.2",
     "drizzle-kit": "catalog:",
     "eslint": "catalog:",
-    "eslint-config-next": "^16.2.11",
+    "eslint-config-next": "^16.3.0",
     "eslint-import-resolver-typescript": "^4.4.5",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
@@ -109,6 +109,6 @@
     "semver": "7.8.0",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
-    "typescript-eslint": "^8.65.0"
+    "typescript-eslint": "^8.66.0"
   }
 }
