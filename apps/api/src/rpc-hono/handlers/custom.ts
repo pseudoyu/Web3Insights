@@ -93,25 +93,23 @@ export const getAnalysisHandler = os.custom.getAnalysis.handler(
 
 export const externalUserHandler = os.custom.externalUser.handler(
   async ({ input, context }) => {
-    return (await context.container.services.users.getTopFormUserName(
+    return await context.container.services.users.getTopFormUserName(
       input.username,
-    )) as never;
+    );
   },
 );
 
 export const externalGithubByIdHandler = os.custom.externalGithubById.handler(
   async ({ input, context }) => {
-    return (await context.container.services.users.getTopFormUserId(
-      input.id,
-    )) as never;
+    return await context.container.services.users.getTopFormUserId(input.id);
   },
 );
 
 export const externalGithubByUsernameHandler =
   os.custom.externalGithubByUsername.handler(async ({ input, context }) => {
-    return (await context.container.services.users.getTopFormGithubUserName(
+    return await context.container.services.users.getTopFormGithubUserName(
       input.username,
-    )) as never;
+    );
   });
 
 export const eventUsersHandler = os.custom.eventUsers.handler(
